@@ -1,4 +1,6 @@
-/* var mongo = require('mongodb');
+/* PRIMEIRA TENTATIVA DE CONEXÃO COM O MONGO
+
+var mongo = require('mongodb');
 
 var connMongoDB = function(){
     console.log('entrou na função de conexão');
@@ -18,7 +20,7 @@ module.exports = function() {
     return connMongoDB;
 } */
 
-
+/* SEGUNDA TENTATIVA DE CONEXÃO COM O MONGO 
 const {MongoClient, ObjectId} = require("mongodb");
 
 let singleton;
@@ -33,4 +35,4 @@ async function connect(){
     singleton = client.db(process.env.MONGO_DATABASE);
     return singleton;    
 
-}
+} */
