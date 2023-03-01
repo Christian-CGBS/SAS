@@ -1,4 +1,6 @@
-/* PRIMEIRA TENTATIVA DE CONEXÃO COM O MONGO
+/* PRIMEIRA TENTATIVA DE CONEXÃO COM O MONGO */
+
+/*
 
 var mongo = require('mongodb');
 
@@ -7,7 +9,7 @@ var connMongoDB = function(){
     var db = new mongo.Db(
         'banco_questoes',
         new mongo.Server(
-            'localhost', // string contendo o endereço do servidor
+            'mongodb+srv://adminUser:123@cluster0.gs9ov1u.mongodb.net/?retryWrites=true&w=majority', // string contendo o endereço do servidor
             27017, //porta de entrada
             {}    
         ),
@@ -20,19 +22,25 @@ module.exports = function() {
     return connMongoDB;
 } */
 
-/* SEGUNDA TENTATIVA DE CONEXÃO COM O MONGO 
+/* SEGUNDA TENTATIVA DE CONEXÃO COM O MONGO  */
 const {MongoClient, ObjectId} = require("mongodb");
+
+require('dotenv').config();
 
 let singleton;
 
 async function connect(){
     if (singleton) return singleton;
 
-    const client = new MongoClient(process.env.MONGO_HOST);
+    const client = new MongoClient(process.env.MONGODB_HOST);
 
-    await client.connnect();
+    await client.connect();
+    console.log('conexão com o bd efetuado com sucesso!');
 
-    singleton = client.db(process.env.MONGO_DATABASE);
+    singleton = client.db('banco_questoes');
     return singleton;    
 
-} */
+}
+
+module.exports = connect;
+

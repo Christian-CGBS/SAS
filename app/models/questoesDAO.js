@@ -14,9 +14,11 @@ questoesDAO.prototype.getCriticidade = function(callback){
     this._connection.query('select normatividade, compreensao, exatidao, utilidade, confiabilidade, atualidade, rapidez, completude, satisfacao, facilidade_uso, facilidade_aprendizagem from analise order by asc', callback);
 }
 
-questoesDAO.prototype.salvarQuestao = function(questoes, callback){
+questoesDAO.prototype.salvarQuestao = async function(questoes, callback){
     console.log(questoes);
-    this._connection.query('insert into questoes set ?', questoes, callback);
+    /* this._connection.query('insert into questoes set ?', questoes, callback); */
+    await this._connection.collection('questoes').insertOne(questoes);
+    callback();
 }
 
 questoesDAO.prototype.salvarEntrada = function(analise, callback){

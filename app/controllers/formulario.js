@@ -1,10 +1,11 @@
+const dbConnection = require('../../config/dbConnection');
+
 module.exports.formulario = function(app, req, res) {
     res.render("questionario/formulario", {validacao : {}, questoes : {} });
     }
 
-module.exports.questoes_salvar = function(app, req, res){
+module.exports.questoes_salvar = async function(app, req, res){
     var questoes = req.body;
-    console.log("controller", questoes);
     req.assert('questao_01', 'A questão 01 é obrigatória').notEmpty();
     req.assert('questao_02', 'A questão 02 é obrigatória').notEmpty();
     req.assert('questao_03', 'A questão 03 é obrigatória').notEmpty();
@@ -38,8 +39,8 @@ module.exports.questoes_salvar = function(app, req, res){
         res.render("questionario/formulario", {validacao : erros, questoes : questoes});
         return;
     }
-    
-    var connection = app.config.dbConnection();
+
+    var connection = await dbConnection();
     
     var saidaModel = new app.app.models.questoesDAO(connection);
 
