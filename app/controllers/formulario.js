@@ -39,7 +39,10 @@ module.exports.questoes_salvar = async function(app, req, res){
         res.render("questionario/formulario", {validacao : erros, questoes : questoes});
         return;
     }
-
+    
+    var d = new Date();
+    questoes.dt_registro = d.toLocaleDateString();
+    
     var connection = await dbConnection();    
     var saidaModel = new app.app.models.questoesDAO(connection);
     saidaModel.salvarQuestao(questoes, function(error, result){
