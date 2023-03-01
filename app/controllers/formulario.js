@@ -40,10 +40,8 @@ module.exports.questoes_salvar = async function(app, req, res){
         return;
     }
 
-    var connection = await dbConnection();
-    
+    var connection = await dbConnection();    
     var saidaModel = new app.app.models.questoesDAO(connection);
-
     saidaModel.salvarQuestao(questoes, function(error, result){
         console.log(error, result);
         res.redirect('/final');

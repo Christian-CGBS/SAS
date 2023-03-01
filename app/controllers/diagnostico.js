@@ -1,3 +1,5 @@
+const dbConnection = require('../../config/dbConnection');
+
 module.exports.entrada = function(app, req, res) {
     
     // captura os dados de entrada para o diagnóstico //
@@ -6,7 +8,7 @@ module.exports.entrada = function(app, req, res) {
     
 }
 
-module.exports.entrada_salvar = function(app, req, res) {
+module.exports.entrada_salvar = async function(app, req, res) {
 
     // verifica os dados de entrada para o diagnóstico //
 
@@ -21,21 +23,20 @@ module.exports.entrada_salvar = function(app, req, res) {
         return;
     } 
     
-    // salva os dados de entrada //
+    // salva os dados de entrada para o diagnóstico//
 
-    var connection = app.config.dbConnection();
+    var connection = await dbConnection();
     var saidaModel = new app.app.models.questoesDAO(connection);    
     saidaModel.salvarEntrada(analise, function(error, result){
         res.render("diagnostico/saida", {validacao : {}, analise : analise });
     });
-
 }
 
-module.exports.saida = function(app, req, res) {
+module.exports.saida = async function(app, req, res) {
     
     // captura as respostas dos questionários //  
     
-    var connection = app.config.dbConnection();
+    var connection = await dbConnection();
     var saidaModel = new app.app.models.questoesDAO(connection);          
     saidaModel.getSaida(questoes, function(error, result){
         res.render("diagnostico/saida", {validacao : {}, questoes : questoes });
