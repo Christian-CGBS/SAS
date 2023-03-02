@@ -27,28 +27,26 @@ module.exports.entrada_salvar = async function(app, req, res) {
     var connection = await dbConnection();
     var saidaModel = new app.app.models.questoesDAO(connection);    
     saidaModel.salvarEntrada(analise, function(error, result){
-        res.render("diagnostico/saida", {validacao : {}, analise : analise });
+        saida(app, req, res);                                     // 1ª ALTERAÇÃO
     });
 }
 
-module.exports.saida = async function(app, req, res) {
+async function saida(app, req, res) {
     
     // lê as respostas dos questionários //
     
     var connection = await dbConnection();
     var saidaModel = new app.app.models.questoesDAO(connection);          
-    saidaModel.getSaida(questoes, function(error, result){
-    // res.render("diagnostico/saida", {validacao : {}, questoes : questoes });
-    });
-    var questoes = req.body;
+    var resultado_saida = await saidaModel.getSaida();             // 2ª ALTERAÇÃO
+    var questoes = await resultado_saida.toArray();
+    console.log(questoes);
 
     // lê os dados de entrada do diagnóstico //  
 
-    saidaModel.getAnalise(analise, function(error, result){
-    //    res.render("diagnostico/saida", {validacao : {}, questoes : questoes });
-    });
-    var analise = req.body;
-    
+    var resultado_analise = await saidaModel.getAnalise();         // 3ª ALTERAÇÃO
+    var analise = await resultado_analise.toArray();
+    console.log(analise);
+
     // inicialização de variáveis //
 
     var sugestoes = "";
@@ -84,17 +82,17 @@ module.exports.saida = async function(app, req, res) {
 
             // agrupar algumas respostas em aspectos, para ordenação por maior criticidade (menor valor) //
 
-            normatividade = questoes[i].questao_08 + questoes[i].questao_21;
-            compreensao = questoes[i].questao_01;
-            exatidao = questoes[i].questao_02 + questoes[i].questao_06 + questoes[i].questao_09;
-            utilidade = questoes[i].questao_03 + questoes[i].questao_04 + questoes[i].questao_13;
-            confiabilidade = questoes[i].questao_05 + questoes[i].questao_11 + questoes[i].questao_12;
-            atualidade = questoes[i].questao_07;
-            rapidez = questoes[i].questao_10;
-            completude = questoes[i].questao_14;
-            satisfacao = questoes[i].questao_15 + questoes[i].questao_20;
-            facilidade_uso = questoes[i].questao_16 + questoes[i].questao_17 + questoes[i].questao_19;
-            facilidade_aprendizagem = questoes[i].questao_18;
+            var normatividade = questoes[i].questao_08 + questoes[i].questao_21;
+            var compreensao = questoes[i].questao_01;
+            var exatidao = questoes[i].questao_02 + questoes[i].questao_06 + questoes[i].questao_09;
+            var utilidade = questoes[i].questao_03 + questoes[i].questao_04 + questoes[i].questao_13;
+            var confiabilidade = questoes[i].questao_05 + questoes[i].questao_11 + questoes[i].questao_12;
+            var atualidade = questoes[i].questao_07;
+            var rapidez = questoes[i].questao_10;
+            var completude = questoes[i].questao_14;
+            var satisfacao = questoes[i].questao_15 + questoes[i].questao_20;
+            var facilidade_uso = questoes[i].questao_16 + questoes[i].questao_17 + questoes[i].questao_19;
+            var facilidade_aprendizagem = questoes[i].questao_18;
 
             // variáveis para o cálculo da correlação de postos de Spearman //
 
@@ -252,15 +250,15 @@ module.exports.saida = async function(app, req, res) {
                 
                 qt_usuarios_externos -= qt_respostas_zeradas;                
             }
-            sugestoes += questoes[i].questao_22; // acumulação das sugestoes (texto) //
+            sugestoes = questoes[i].questao_22 + " " + sugestoes; // acumulação das sugestoes (texto) //
         }       
     }
 
     // cálculo do tamanho das amostras mínimas //
     
-    amostra_internos = (analise.qt_resp_int * 0.5 * 1.96**2) / ((0.5 * 1.96**2) + (analise.qt_resp.int-1) * 0.05**2);
+    amostra_internos = (analise.qt_resp_int * 0.5 * 1.96**2) / ((0.5 * 1.96**2) + (analise.qt_resp_int-1) * 0.05**2);
 
-    amostra_externos = (analise.qt_resp_ext * 0.5 * 1.96**2) / ((0.5 * 1.96**2) + (analise.qt_resp.ext-1) * 0.05**2);
+    amostra_externos = (analise.qt_resp_ext * 0.5 * 1.96**2) / ((0.5 * 1.96**2) + (analise.qt_resp_ext-1) * 0.05**2);
 
     if (amostra_internos <= analise.qt_resp_int && amostra_externos <= analise.qt_resp_ext) {
         analise.amostra_significativa = true;

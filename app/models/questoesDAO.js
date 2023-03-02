@@ -13,16 +13,14 @@ questoesDAO.prototype.salvarEntrada = async function(analise, callback){
     callback();
 }
 
-questoesDAO.prototype.getSaida = async function(callback){
-    console.log(questoes);
-    await this._connection.collection('questoes').findOne(questoes);
-    callback();
+questoesDAO.prototype.getSaida = async function(){
+    const result = await this._connection.collection('questoes').find();
+    return result;
 }
 
-questoesDAO.prototype.getAnalise = async function(callback){
-    console.log(analise);
-    await this._connection.collection('analise').findOne(analise);
-    callback();
+questoesDAO.prototype.getAnalise = async function(){
+    const result = await this._connection.collection('analise').find();
+    return result;
 }
 
 /*
