@@ -19,9 +19,13 @@ questoesDAO.prototype.getSaida = async function(callback){
     callback();
 }
 
-/* questoesDAO.prototype.getAnalise = function(callback){
-    this._connection.query('select * from analise', callback);
+questoesDAO.prototype.getAnalise = async function(callback){
+    console.log(analise);
+    await this._connection.collection('analise').findOne(analise);
+    callback();
 }
+
+/*
 
 questoesDAO.prototype.getCriticidade = function(callback){
     this._connection.query('select normatividade, compreensao, exatidao, utilidade, confiabilidade, atualidade, rapidez, completude, satisfacao, facilidade_uso, facilidade_aprendizagem from analise order by asc', callback);

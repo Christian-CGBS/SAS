@@ -13,32 +13,21 @@
     </header>
     <main>
         <h2>Avaliação de Aderência de Sistemas de Informação a Processos de Negócio</h2>
-        <h3>Saída dos dados</h3>        
-        
-            <ul>
-                <% for (var i=0; i < 3; i++) { %>
-                    <li>
-                        <%= questoes[i].dt_registro %>
-                    </li>
-                <% } %>
-            </ul>
+        <h3>Saída dos dados</h3>
+
+        <p>Sistema avaliado: <%= analise.sistema %> </p>       
+                
+        <p>Período pesquisado: início em <%= analise.dt_inicio %> término em <%= analise.dt_fim %></p>
+        <p>Total de respostas recebidas= <%= analise.qt_resp %></p>
+        <p>Amostra significativa ? [S/N] <%= analise.amostra_significativa %></p>
+        <p>Grau de congruência [0 a 9] <%= analise.grau_congruencia %></p>
+        <p>Pontuação média final dos usuários:</p>
+        <p>usuários internos= <%= analise.nota_usuarios_internos %> <%= analise.resultado_ui %></p>
+        <p>usuários externos= <%= analise.nota_usuarios_externos %> <%= analise.resultado_ue %> (se aplicável)</p>
+        <p>Pontuação média global= <%= analise.nota_final %> <%= analise.resultado %></p>
+        <p>Sugestões recebidas: [?????] </p>
+        <p>Itens de maior criticidade: [?????] </p>
     
-        <p>Sistema avaliado: <%= sistema %> </p>       
-        
-        <% if (sistema == analise[pos].sistema) { %>
-            <p>Período pesquisado: início em <%= analise[pos].dt_inicio %> término em <%= analise[pos].dt_fim %></p>
-            <p>Total de respostas recebidas= <%= analise[pos].qt_resp %></p>
-            <p>Amostra significativa ? [S/N] <%= analise[pos].amostra_significativa %></p>
-            <p>Grau de congruência [0 a 9] <%= analise[pos].grau_congruencia %></p>
-            <p>Pontuação média final dos usuários:</p>
-            <p>usuários internos= <%= analise[pos].nota_usuarios_internos %> <%= analise[pos].resultado_ui %></p>
-            <p>usuários externos= <%= analise[pos].nota_usuarios_externos %> <%= analise[pos].resultado_ue %> (se aplicável)</p>
-            <p>Pontuação média global= <%= analise[pos].nota_final %> <%= analise[pos].resultado %></p>
-            <p>Sugestões recebidas: [?????] </p>
-            <p>Itens de maior criticidade: [?????] </p>
-        <% } else { %>
-            <p> Não há respostas enviadas para o sistema informado</p>
-        <% } %>        
     </main>
     <footer>
         <p>Christian Gomes Bezerra dos Santos / christian.gomes@ufpe.br</p>

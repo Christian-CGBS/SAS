@@ -4,8 +4,7 @@ module.exports.entrada = function(app, req, res) {
     
     // captura os dados de entrada para o diagnóstico //
     
-    res.render("diagnostico/entrada", {validacao : {}, analise : {} });   
-    
+    res.render("diagnostico/entrada", {validacao : {}, analise : {} });    
 }
 
 module.exports.entrada_salvar = async function(app, req, res) {
@@ -34,14 +33,21 @@ module.exports.entrada_salvar = async function(app, req, res) {
 
 module.exports.saida = async function(app, req, res) {
     
-    // captura as respostas dos questionários //  
+    // lê as respostas dos questionários //
     
     var connection = await dbConnection();
     var saidaModel = new app.app.models.questoesDAO(connection);          
     saidaModel.getSaida(questoes, function(error, result){
-        res.render("diagnostico/saida", {validacao : {}, questoes : questoes });
+    // res.render("diagnostico/saida", {validacao : {}, questoes : questoes });
     });
     var questoes = req.body;
+
+    // lê os dados de entrada do diagnóstico //  
+
+    saidaModel.getAnalise(analise, function(error, result){
+    //    res.render("diagnostico/saida", {validacao : {}, questoes : questoes });
+    });
+    var analise = req.body;
     
     // inicialização de variáveis //
 
@@ -68,7 +74,7 @@ module.exports.saida = async function(app, req, res) {
 
         // pegando a data do registro e selecionando as questões situadas no intervalo //
         
-        data_registro = questoes[i].dt_registro.slice(0,9);
+        data_registro = questoes[i].dt_registro;
 
         if (data_registro <= analise.dt_fim && data_registro >= analise.dt_inicio) {
                              
@@ -246,7 +252,6 @@ module.exports.saida = async function(app, req, res) {
                 
                 qt_usuarios_externos -= qt_respostas_zeradas;                
             }
-
             sugestoes += questoes[i].questao_22; // acumulação das sugestoes (texto) //
         }       
     }
@@ -386,12 +391,8 @@ module.exports.saida = async function(app, req, res) {
     2.3) ver a frequência com que aparecem;
     2.4) retornar o resultado segmentado por núcleos factuais. */
 
-    // salva e apresenta os dados do diagnóstico //
-
-    res.render("diagnostico/saida", {validacao : {}, analise : analise });
-    var analise = req.body;
-    var connection = app.config.dbConnection();
-    var saidaModel = new app.app.models.questoesDAO(connection);
+    // salva e apresenta os dados de saída do diagnóstico //
+ 
     saidaModel.salvarEntrada(analise, function(error, result)
     {
         res.redirect('/saida');
