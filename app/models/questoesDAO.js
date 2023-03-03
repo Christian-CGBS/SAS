@@ -8,7 +8,7 @@ questoesDAO.prototype.salvarQuestao = async function(questoes, callback){
 }
 
 questoesDAO.prototype.salvarEntrada = async function(analise, callback){
-    console.log(analise);
+    console.log('QuestoesDAO = ', analise);
     await this._connection.collection('analise').insertOne(analise);
     callback();
 }
@@ -24,7 +24,6 @@ questoesDAO.prototype.getAnalise = async function(){
 }
 
 /*
-
 questoesDAO.prototype.getCriticidade = function(callback){
     this._connection.query('select normatividade, compreensao, exatidao, utilidade, confiabilidade, atualidade, rapidez, completude, satisfacao, facilidade_uso, facilidade_aprendizagem from analise order by asc', callback);
 } */

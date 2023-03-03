@@ -2,58 +2,67 @@ const dbConnection = require('../../config/dbConnection');
 
 module.exports.entrada = function(app, req, res) {
     
-    // captura os dados de entrada para o diagnóstico //
+    // captura os dados de entrada para o diagnóstico
     
     res.render("diagnostico/entrada", {validacao : {}, analise : {} });    
 }
 
 module.exports.entrada_salvar = async function(app, req, res) {
 
-    // verifica os dados de entrada para o diagnóstico //
+    // verifica os dados de entrada para o diagnóstico
 
     var analise = req.body;
     req.assert('sistema', 'O nome do sistema é obrigatório').notEmpty();
     req.assert('dt_inicio', 'A data de início é obrigatória').isDate();
     req.assert('dt_fim', 'A data de fim é obrigatória').isDate();
-    req.assert('qt_resp', 'A quantidade de usuários é obrigatória').notEmpty();    
+    req.assert('qt_resp_int', 'A quantidade de usuários internos é obrigatória').notEmpty();    
     var erros = req.validationErrors();
     if (erros) {
         res.render("diagnostico/entrada", {validacao : erros, analise : analise});
         return;
     } 
     
-    // salva os dados de entrada para o diagnóstico//
+    // salva os dados de entrada para o diagnóstico
 
     var connection = await dbConnection();
-    var saidaModel = new app.app.models.questoesDAO(connection);    
+    var saidaModel = new app.app.models.questoesDAO(connection);
+    var d = new Date();
+    analise.dt_registro = d.toLocaleDateString();              // salva a data da análise
     saidaModel.salvarEntrada(analise, function(error, result){
-        saida(app, req, res);                                     // 1ª ALTERAÇÃO
+        saida(app, req, res);                                  // Chamando a função Saída
     });
 }
 
 async function saida(app, req, res) {
     
-    // lê as respostas dos questionários //
+    // lê as respostas dos questionários
     
     var connection = await dbConnection();
     var saidaModel = new app.app.models.questoesDAO(connection);          
-    var resultado_saida = await saidaModel.getSaida();             // 2ª ALTERAÇÃO
+    var resultado_saida = await saidaModel.getSaida();         // Pegando a collection QUESTOES
     var questoes = await resultado_saida.toArray();
     console.log(questoes);
 
-    // lê os dados de entrada do diagnóstico //  
+    // lê os dados de entrada do diagnóstico
 
-    var resultado_analise = await saidaModel.getAnalise();         // 3ª ALTERAÇÃO
+    var resultado_analise = await saidaModel.getAnalise();     // Pegando a collection ANALISE
     var analise = await resultado_analise.toArray();
     console.log(analise);
 
-    // inicialização de variáveis //
+    // inicialização de variáveis
 
     var sugestoes = "";
-    var soma_usuarios_internos = 0;
-    var qt_usuarios_internos = 0;
-    var soma_usuarios_externos = 0;
-    var qt_usuarios_externos = 0;
+    
+    var qt_usuario_interno = 0;
+    var qt_resp_usuario_interno = 0;
+    var qt_resp_usuario_interno_zerada = 0;
+    var soma_usuario_interno = 0;
+
+    var qt_usuario_externo = 0;
+    var qt_resp_usuario_externo = 0;
+    var qt_resp_usuario_externo_zerada = 0;
+    var soma_usuario_externo = 0;
+
     var calc_r1 = 0;
     var calc_r2 = 0;
     var calc_r3 = 0;
@@ -64,23 +73,38 @@ async function saida(app, req, res) {
     var calc_r6 = 0;
     var calc_r7 = 0;
     var grau_congruencia = 0;
-    var qt_respostas_zeradas = 0;
-        
-    // processamento //
+            
+    // processamento
 
     for (var i=0; i < questoes.length; i++) {
 
-        // pegando a data do registro e selecionando as questões situadas no intervalo //
+        console.log('quantidade de documentos em questoes = ', questoes.length);
+
+        // pegando a data do registro 
         
         data_registro = questoes[i].dt_registro;
 
-        if (data_registro <= analise.dt_fim && data_registro >= analise.dt_inicio) {
+        // pegando a posição do último registro em análise
+
+        pos = analise.length-1; 
+
+        console.log('data do documento em questoes = ', data_registro);
+        console.log('data de início da análise =', analise[pos].dt_inicio);
+        console.log('data de fim da análise =', analise[pos].dt_fim);
+        
+        // selecionando as questões situadas no intervalo de tempo informado
+        
+        dt_reg = new Date(data_registro).getTime();
+        dt_in = new Date(analise[pos].dt_inicio).getTime();
+        dt_fm = new Date(analise[pos].dt_fim).getTime();
+
+        if (dt_reg <= dt_in && dt_reg >= dt_fm) {
                              
-            // soma das respostas //
+            // soma das respostas das questoes
         
             soma_questao = questoes[i].questao_01 + questoes[i].questao_02 + questoes[i].questao_03 + questoes[i].questao_04 + questoes[i].questao_05 + questoes[i].questao_06 + questoes[i].questao_07 + questoes[i].questao_08 + questoes[i].questao_09 + questoes[i].questao_10 + questoes[i].questao_11 + questoes[i].questao_12 + questoes[i].questao_13 + questoes[i].questao_14 + questoes[i].questao_15 + questoes[i].questao_16 + questoes[i].questao_17 + questoes[i].questao_18 + questoes[i].questao_19 + questoes[i].questao_20 + questoes[i].questao_21;
 
-            // agrupar algumas respostas em aspectos, para ordenação por maior criticidade (menor valor) //
+            // agrupar algumas respostas em aspectos, para ordenação por maior criticidade (menor valor)
 
             var normatividade = questoes[i].questao_08 + questoes[i].questao_21;
             var compreensao = questoes[i].questao_01;
@@ -94,7 +118,7 @@ async function saida(app, req, res) {
             var facilidade_uso = questoes[i].questao_16 + questoes[i].questao_17 + questoes[i].questao_19;
             var facilidade_aprendizagem = questoes[i].questao_18;
 
-            // variáveis para o cálculo da correlação de postos de Spearman //
+            // variáveis para o cálculo da correlação de postos de Spearman
 
             calc_r1 += (questoes[i].questao_06 - questoes[i].questao_09)**2;
             calc_r2 += (questoes[i].questao_11 - questoes[i].questao_12)**2;
@@ -107,180 +131,186 @@ async function saida(app, req, res) {
             calc_r7 += (questoes[i].questao_18 - questoes[i].identificacao_04)**2;
                         
             if (questoes[i].identificacao_01 == "0") { 
-                soma_usuarios_internos += soma_questao; // somas dos usuários internos //
-                qt_usuarios_internos++;
+                soma_usuario_interno += soma_questao; // somas dos usuários internos
+                qt_usuario_interno++;
 
-                // deduzir a quantidade de respostas iguais a zero ("não se aplica") //
+                // deduzir a quantidade de respostas iguais a zero ("não se aplica")
 
                 if (questoes[i].questao_01 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_interno_zerada ++;
                 }
                 if (questoes[i].questao_02 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_interno_zerada ++;
                 } 
                 if (questoes[i].questao_03 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_interno_zerada ++;
                 }    
                 if (questoes[i].questao_04 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_interno_zerada ++;
                 }    
                 if (questoes[i].questao_05 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_interno_zerada ++;
                 }    
                 if (questoes[i].questao_06 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_interno_zerada ++;
                 }    
                 if (questoes[i].questao_07 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_interno_zerada ++;
                 }    
                 if (questoes[i].questao_08 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_interno_zerada ++;
                 }    
                 if (questoes[i].questao_09 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_interno_zerada ++;
                 }    
                 if (questoes[i].questao_10 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_interno_zerada ++;
                 }    
                 if (questoes[i].questao_11 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_interno_zerada ++;
                 }    
                 if (questoes[i].questao_12 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_interno_zerada ++;
                 }    
                 if (questoes[i].questao_13 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_interno_zerada ++;
                 }    
                 if (questoes[i].questao_14 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_interno_zerada ++;
                 }    
                 if (questoes[i].questao_15 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_interno_zerada ++;
                 }    
                 if (questoes[i].questao_16 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_interno_zerada ++;
                 }    
                 if (questoes[i].questao_17 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_interno_zerada ++;
                 }    
                 if (questoes[i].questao_18 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_interno_zerada ++;
                 }    
                 if (questoes[i].questao_19 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_interno_zerada ++;
                 }    
                 if (questoes[i].questao_20 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_interno_zerada ++;
                 }    
                 if (questoes[i].questao_21 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_interno_zerada ++;
                 }
-
-                qt_usuarios_internos -= qt_respostas_zeradas;
-
+                
             } else {
-                soma_usuarios_externos += soma_questao; // somas dos usuários externos //
-                qt_usuarios_externos++;
+                soma_usuario_externo += soma_questao; // somas dos usuários externos
+                qt_usuario_externo++;
 
-                // deduzir a quantidade de respostas iguais a zero ("não se aplica") //
+                // deduzir a quantidade de respostas iguais a zero ("não se aplica")
 
                 if (questoes[i].questao_01 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_externo_zerada ++;
                 }    
                 if (questoes[i].questao_02 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_externo_zerada ++;
                 }    
                 if (questoes[i].questao_03 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_externo_zerada ++;
                 }    
                 if (questoes[i].questao_04 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_externo_zerada ++;
                 }    
                 if (questoes[i].questao_05 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_externo_zerada ++;
                 }    
                 if (questoes[i].questao_06 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_externo_zerada ++;
                 }    
                 if (questoes[i].questao_07 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_externo_zerada ++;
                 }    
                 if (questoes[i].questao_08 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_externo_zerada ++;
                 }    
                 if (questoes[i].questao_09 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_externo_zerada ++;
                 }    
                 if (questoes[i].questao_10 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_externo_zerada ++;
                 }    
                 if (questoes[i].questao_11 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_externo_zerada ++;
                 }    
                 if (questoes[i].questao_12 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_externo_zerada ++;
                 }    
                 if (questoes[i].questao_13 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_externo_zerada ++;
                 }    
                 if (questoes[i].questao_14 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_externo_zerada ++;
                 }    
                 if (questoes[i].questao_15 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_externo_zerada ++;
                 }    
                 if (questoes[i].questao_16 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_externo_zerada ++;
                 }    
                 if (questoes[i].questao_17 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_externo_zerada ++;
                 }    
                 if (questoes[i].questao_18 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_externo_zerada ++;
                 }    
                 if (questoes[i].questao_19 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_externo_zerada ++;
                 }    
                 if (questoes[i].questao_20 == 0) {
-                    qt_respostas_zeradas ++;
+                    qt_resp_usuario_externo_zerada ++;
                 }    
                 if (questoes[i].questao_21 == 0) {
-                    qt_respostas_zeradas ++;
-                }                    
-                
-                qt_usuarios_externos -= qt_respostas_zeradas;                
+                    qt_resp_usuario_externo_zerada ++;
+                }                         
             }
-            sugestoes = questoes[i].questao_22 + " " + sugestoes; // acumulação das sugestoes (texto) //
-        }       
+            sugestoes = questoes[i].questao_22 + " " + sugestoes; // acumulação das sugestoes (texto)
+
+        } else {
+            console.log('registro ',i, ' não pertence ao período de pesquisa informado');
+        }
     }
 
-    // cálculo do tamanho das amostras mínimas //
+    // cálculo do tamanho das amostras mínimas    
+    // analise.qt_resp_int > 0 (quantidade de usuários internos é sempre positiva)
+
+    amostra_internos = (analise[pos].qt_resp_int * 0.5 * 1.96**2) / ((0.5 * 1.96**2) + (analise[pos].qt_resp_int-1) * 0.05**2);
+
+    // a amostra para usuários externos só é calculada se analise.qt_resp_ext > 0
+
+    if (analise[pos].qt_resp_ext > 0) {
+        amostra_externos = (analise[pos].qt_resp_ext * 0.5 * 1.96**2) / ((0.5 * 1.96**2) + (analise[pos].qt_resp_ext-1) * 0.05**2);
+    } else {
+        amostra_externos = 0;
+    }
     
-    amostra_internos = (analise.qt_resp_int * 0.5 * 1.96**2) / ((0.5 * 1.96**2) + (analise.qt_resp_int-1) * 0.05**2);
-
-    amostra_externos = (analise.qt_resp_ext * 0.5 * 1.96**2) / ((0.5 * 1.96**2) + (analise.qt_resp_ext-1) * 0.05**2);
-
-    if (amostra_internos <= analise.qt_resp_int && amostra_externos <= analise.qt_resp_ext) {
+    if (amostra_internos <= analise[pos].qt_resp_int && amostra_externos <= analise[pos].qt_resp_ext) {
         analise.amostra_significativa = true;
     } else {
         analise.amostra_significativa = false;
     }
     
-    // cálculo da admissão da amostra = análise de congruência //
-    
-    // variáveis de congruência: r1, r2, r3, r41, r42, r43, r5, r6 e r7 //
+    // cálculo da admissão da amostra = análise de congruência    
+    // variáveis de congruência: r1, r2, r3, r41, r42, r43, r5, r6 e r7
+    // cálculo da correlação de postos de Spearman
 
-    // cálculo da correlação de postos de Spearman //
+    qt_resp = qt_usuario_interno + qt_usuario_externo;         // total de respondentes
 
-    r1 = 1 - ( (6 * calc_r1) / (analise.qt_resp - (analise.qt_resp**2 - 1)) );
-    r2 = 1 - ( (6 * calc_r2) / (analise.qt_resp - (analise.qt_resp**2 - 1)) );
-    r3 = 1 - ( (6 * calc_r3) / (analise.qt_resp - (analise.qt_resp**2 - 1)) );
-    r41 = 1 - ( (6 * calc_r41) / (analise.qt_resp - (analise.qt_resp**2 - 1)) );
-    r42 = 1 - ( (6 * calc_r42) / (analise.qt_resp - (analise.qt_resp**2 - 1)) );
-    r43 = 1 - ( (6 * calc_r43) / (analise.qt_resp - (analise.qt_resp**2 - 1)) );
-    r5 = 1 - ( (6 * calc_r5) / (analise.qt_resp - (analise.qt_resp**2 - 1)) );
-    r6 = 1 - ( (6 * calc_r6) / (analise.qt_resp - (analise.qt_resp**2 - 1)) );
-    r7 = 1 - ( (6 * calc_r7) / (analise.qt_resp - (analise.qt_resp**2 - 1)) );
+    r1 = 1 - ( (6 * calc_r1) / (qt_resp - (qt_resp**2 - 1)) );
+    r2 = 1 - ( (6 * calc_r2) / (qt_resp - (qt_resp**2 - 1)) );
+    r3 = 1 - ( (6 * calc_r3) / (qt_resp - (qt_resp**2 - 1)) );
+    r41 = 1 - ( (6 * calc_r41) / (qt_resp - (qt_resp**2 - 1)) );
+    r42 = 1 - ( (6 * calc_r42) / (qt_resp - (qt_resp**2 - 1)) );
+    r43 = 1 - ( (6 * calc_r43) / (qt_resp - (qt_resp**2 - 1)) );
+    r5 = 1 - ( (6 * calc_r5) / (qt_resp - (qt_resp**2 - 1)) );
+    r6 = 1 - ( (6 * calc_r6) / (qt_resp - (qt_resp**2 - 1)) );
+    r7 = 1 - ( (6 * calc_r7) / (qt_resp - (qt_resp**2 - 1)) );
 
     // cálculo de z para o teste de hipótese da correlação //
 
@@ -326,30 +356,42 @@ async function saida(app, req, res) {
   
     // resultados das variáveis de análise //
 
-    analise.qt_resp = qt_usuarios_internos + qt_usuarios_externos;    
-    analise.nota_usuarios_internos = soma_usuarios_internos / qt_usuarios_internos;
-    analise.nota_usuarios_externos = soma_usuarios_externos / qt_usuarios_externos;
-    analise.nota_final = (analise.nota_usuarios_internos * 7 + analise.nota_usuarios_externos * 3) / 10;    
+    analise.qt_resp = qt_usuario_interno + qt_usuario_externo;
+
+    analise.nota_usuario_interno = soma_usuario_interno / (qt_resp_usuario_interno-qt_resp_usuario_interno_zerada);
+
+    if (qt_usuario_externo > 0) {
+        analise.nota_usuario_externo = soma_usuario_externo / (qt_resp_usuario_externo-qt_resp_usuario_externo_zerada);
+        analise.nota_final = (analise.nota_usuario_interno * 7 + analise.nota_usuario_externo * 3) / 10;
+    } else {
+        analise.nota_usuario_externo = 0;
+        analise.nota_final = analise.nota_usuario_interno;
+    }    
+     
     analise.grau_congruencia = grau_congruencia;
 
     // resultado usuários internos e externos //
 
-    if (analise.nota_usuarios_internos < 42 ) {
+    if (analise.nota_usuario_interno < 42 ) {
         analise.resultado_ui = "sistema deve ser substituído";
-    } else if (analise.nota_usuarios_internos < 63) {
+    } else if (analise.nota_usuario_interno < 63) {
         analise.resultado_ui = "sistema precisa de ajustes";
     } else {
         analise.resultado_ui = "sistema não necessita de alterações";
     }
     
-    if (analise.nota_usuarios_externos < 42 ) {
-        analise.resultado_ue = "sistema deve ser substituído";
-    } else if (analise.nota_usuarios_externos < 63) {
-        analise.resultado_ue = "sistema precisa de ajustes";
+    if (qt_usuario_externo > 0) {
+        if (analise.nota_usuario_externo < 42 ) {
+            analise.resultado_ue = "sistema deve ser substituído";
+        } else if (analise.nota_usuario_externo < 63) {
+            analise.resultado_ue = "sistema precisa de ajustes";
+        } else {
+            analise.resultado_ue = "sistema não necessita de alterações";
+        }
     } else {
-        analise.resultado_ue = "sistema não necessita de alterações";
+        analise.resultado_ue = "não há usuários externos"
     }
-    
+        
     // resultado geral //
     
     if (analise.nota_final < 42 ) {
@@ -390,7 +432,9 @@ async function saida(app, req, res) {
     2.4) retornar o resultado segmentado por núcleos factuais. */
 
     // salva e apresenta os dados de saída do diagnóstico //
- 
+
+    console.log(analise);
+        
     saidaModel.salvarEntrada(analise, function(error, result)
     {
         res.redirect('/saida');
