@@ -1,12 +1,12 @@
 const dbConnection = require('../../config/dbConnection');
 
 module.exports.entrada = function(app, req, res) {    
-    // captura os dados de entrada para o diagnóstico    
+    // captura os dados de entrada para ANALISE
     res.render("diagnostico/entrada", {validacao : {}, analise : {} });    
 }
 
 module.exports.saida = async function(app, req, res) {
-    // apresenta os dados de análise
+    // apresenta os dados de ANALISE
     var connection = await dbConnection();
     var saidaModel = new app.app.models.questoesDAO(connection);
     const resultado_analise = await saidaModel.getAnalise();
@@ -16,7 +16,7 @@ module.exports.saida = async function(app, req, res) {
 }
 
 module.exports.entrada_salvar = async function(app, req, res) {
-    // verifica os dados de entrada para o diagnóstico
+    // verifica os dados de entrada ANALISE
 
     var analise = req.body;
     req.assert('sistema', 'O nome do sistema é obrigatório').notEmpty();
@@ -277,7 +277,7 @@ module.exports.entrada_salvar = async function(app, req, res) {
     
     qt_resp = qt_usuario_interno + qt_usuario_externo;  // total de respondentes
     
-    if (qt_resp > 0) { // só executa se houver registros selecionados
+    if (qt_resp > 0) { // só analisa se houver documentos selecionados
 
         // cálculo do tamanho das amostras mínimas
         // analise.qt_resp_int > 0 (quantidade de usuários internos é sempre positiva)
@@ -419,7 +419,6 @@ module.exports.entrada_salvar = async function(app, req, res) {
         
         // apresentar os aspectos de maior criticidade em ordem crescente //
 
-
         // Análise da variável sugestoes
         
         /* 1. separar em núcleos factuais:
@@ -432,9 +431,9 @@ module.exports.entrada_salvar = async function(app, req, res) {
         2.3) ver a frequência com que aparecem;
         2.4) retornar o resultado segmentado por núcleos factuais. */
 
-        // salva os dados da análise
+        // salva os dados da ANALISE
         
-        var d = new Date();                        // pega a data da análise
+        var d = new Date();          // pega a data da ANALISE
         analise.dt_registro = d.toLocaleDateString();
 
         saidaModel.salvarEntrada(analise, function(error, result)
