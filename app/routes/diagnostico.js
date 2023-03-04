@@ -9,5 +9,9 @@ module.exports = function(app) {
 
     app.get('/saida', function(req,res){
         app.app.controllers.diagnostico.saida(app, req, res);
-    });  
+    });
+
+    app.get('/saida_vazia', function(req,res){
+        app.app.controllers.diagnostico.saida_vazia(app, req, res);
+    });
 }

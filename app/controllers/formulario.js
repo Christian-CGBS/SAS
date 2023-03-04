@@ -71,7 +71,7 @@ module.exports.questoes_salvar = async function(app, req, res){
     // pegar data atual e salvar
 
     var d = new Date();
-    questoes.dt_registro = d.toLocaleDateString();
+    questoes.dt_registro = d.toISOString();
 
     var connection = await dbConnection();    
     var saidaModel = new app.app.models.questoesDAO(connection);

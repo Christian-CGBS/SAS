@@ -5,6 +5,11 @@ module.exports.entrada = function(app, req, res) {
     res.render("diagnostico/entrada", {validacao : {}, analise : {} });    
 }
 
+module.exports.saida_vazia = async function(app, req, res) {    
+    // retorna tela vazia se não foram encontrados registros
+    res.render("diagnostico/saida_vazia");
+}
+
 module.exports.saida = async function(app, req, res) {
     // apresenta os dados de ANALISE
     var connection = await dbConnection();
@@ -19,6 +24,7 @@ module.exports.entrada_salvar = async function(app, req, res) {
     // verifica os dados de entrada ANALISE
 
     var analise = req.body;
+    console.log('como chegam os dados de entrada de ANALISE:', analise);
     req.assert('sistema', 'O nome do sistema é obrigatório').notEmpty();
     req.assert('dt_inicio', 'A data de início é obrigatória').isDate();
     req.assert('dt_fim', 'A data de fim é obrigatória').isDate();
@@ -85,6 +91,11 @@ module.exports.entrada_salvar = async function(app, req, res) {
         // pegando a data do documento (registro)
         
         data_registro = questoes[i].dt_registro;
+
+        // convertendo datas para o formato BR
+
+        //inicio = analise.dt_inicio.split('-').reverse().join('/');
+        //final = analise.dt_fim.split('-').reverse().join('/');
         
         // verificando se o documento se situa no intervalo de tempo informado
         
@@ -419,6 +430,23 @@ module.exports.entrada_salvar = async function(app, req, res) {
         
         // apresentar os aspectos de maior criticidade em ordem crescente //
 
+        const criticidade = [
+            {nome:"normatividade", valor:analise.normatividade},
+            {nome:"compreensao", valor:analise.compreensao},
+            {nome:"exatidao", valor:analise.exatidao},
+            {nome:"utilidade", valor:analise.utilidade},
+            {nome:"confiabilidade", valor:analise.confiabilidade},
+            {nome:"atualidade", valor:analise.atualidade},
+            {nome:"rapidez", valor:analise.rapidez},
+            {nome:"completude", valor:analise.completude},
+            {nome:"satisfacao", valor:analise.satisfacao},
+            {nome:"facilidade_uso", valor:analise.facilidade_uso},
+            {nome:"facilidade_aprendizagem", valor:analise.facilidade_aprendizagem}
+        ]
+
+        criticidade.sort(function(a, b){return a.valor - b.valor});
+        analise.criticidade = criticidade;
+
         // Análise da variável sugestoes
         
         /* 1. separar em núcleos factuais:
@@ -431,17 +459,18 @@ module.exports.entrada_salvar = async function(app, req, res) {
         2.3) ver a frequência com que aparecem;
         2.4) retornar o resultado segmentado por núcleos factuais. */
 
-        // salva os dados da ANALISE
-        
-        var d = new Date();          // pega a data da ANALISE
-        analise.dt_registro = d.toLocaleDateString();
 
+
+        // pega a data e salva os dados da ANALISE
+        
+        var d = new Date();
+        analise.dt_registro = d.toISOString();
+        
         saidaModel.salvarEntrada(analise, function(error, result)
             {
                 res.redirect('/saida');
             });       
-    } else {
-       // window.alert('Não há registros para o período informado!');
-       console.log('Não há registros para o período informado!');
+    } else {  // desvia para a tela de registros não encontrados
+        res.redirect("/saida_vazia");        
     }
 }

@@ -1,4 +1,4 @@
-// teste rotina extrair palavras //
+// teste rotina extrair palavras e contar frequência
 
 var sugestao = '  apenas um teste   ';
 var resultado = '';
@@ -8,7 +8,7 @@ sugestao = sugestao.trim();
 for (var i=0; i < sugestao.length ; i++) {
   palavra = sugestao.slice(i, sugestao.indexOf(' '));
   console.log('iteração: ',i);
-  if (palavra.length > 3) {
+  if (palavra.length > 3) {  // considera palavra acima de três caracteres
     resultado += palavra;
     console.log('palavra selecionada:', palavra);
   } else {
@@ -26,8 +26,7 @@ for (var i=0; i < sugestao.length ; i++) {
 }
 console.log('palavras selecionadas:', resultado);
 
-// teste ordenar aspectos críticos //
-//
+// teste ordenar aspectos críticos
 
 normatividade = 15;
 compreensao = 5;
@@ -41,10 +40,20 @@ satisfacao = 10;
 facilidade_uso = 10;
 facilidade_aprendizagem = 100;
 
-aspectos = [normatividade, compreensao, exatidao, utilidade, confiabilidade, atualidade, rapidez, completude, satisfacao, facilidade_uso, facilidade_aprendizagem];
+const criticidade = [
+  {type:"normatividade", valor:normatividade},
+  {type:"compreensao", valor:compreensao},
+  {type:"exatidao", valor:exatidao},
+  {type:"utilidade", valor:utilidade},
+  {type:"confiabilidade", valor:confiabilidade},
+  {type:"atualidade", valor:atualidade},
+  {type:"rapidez", valor:rapidez},
+  {type:"completude", valor:completude},
+  {type:"satisfacao", valor:satisfacao},
+  {type:"facilidade_uso", valor:facilidade_uso},
+  {type:"facilidade_aprendizagem", valor:facilidade_aprendizagem}
+]
 
-console.log('aspectos: ', aspectos);
+criticidade.sort(function(a, b){return a.valor - b.valor});
 
-aspectos.sort();
-
-console.log('aspectos mais críticos:', aspectos);
+console.log(criticidade);
