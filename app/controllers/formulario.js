@@ -40,9 +40,39 @@ module.exports.questoes_salvar = async function(app, req, res){
         return;
     }
     
+    // convertendo as questoes de string para numérico, antes de salvar
+
+    questoes.questao_01 = Number(questoes.questao_01);
+    questoes.questao_02 = Number(questoes.questao_02);
+    questoes.questao_03 = Number(questoes.questao_03);
+    questoes.questao_04 = Number(questoes.questao_04);
+    questoes.questao_05 = Number(questoes.questao_05);
+    questoes.questao_06 = Number(questoes.questao_06);
+    questoes.questao_07 = Number(questoes.questao_07);
+    questoes.questao_08 = Number(questoes.questao_08);
+    questoes.questao_09 = Number(questoes.questao_09);
+    questoes.questao_10 = Number(questoes.questao_10);
+    questoes.questao_11 = Number(questoes.questao_11);
+    questoes.questao_12 = Number(questoes.questao_12);
+    questoes.questao_13 = Number(questoes.questao_13);
+    questoes.questao_14 = Number(questoes.questao_14);
+    questoes.questao_15 = Number(questoes.questao_15);
+    questoes.questao_16 = Number(questoes.questao_16);
+    questoes.questao_17 = Number(questoes.questao_17);
+    questoes.questao_18 = Number(questoes.questao_18);
+    questoes.questao_19 = Number(questoes.questao_19);
+    questoes.questao_20 = Number(questoes.questao_20);
+    questoes.questao_21 = Number(questoes.questao_21);
+    questoes.identificacao_01 = Number(questoes.identificacao_01);
+    questoes.identificacao_02 = Number(questoes.identificacao_02);
+    questoes.identificacao_03 = Number(questoes.identificacao_03);
+    questoes.identificacao_04 = Number(questoes.identificacao_04);
+
+    // pegar data atual e salvar
+
     var d = new Date();
     questoes.dt_registro = d.toLocaleDateString();
-    
+
     var connection = await dbConnection();    
     var saidaModel = new app.app.models.questoesDAO(connection);
     saidaModel.salvarQuestao(questoes, function(error, result){

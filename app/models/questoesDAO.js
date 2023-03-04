@@ -8,7 +8,6 @@ questoesDAO.prototype.salvarQuestao = async function(questoes, callback){
 }
 
 questoesDAO.prototype.salvarEntrada = async function(analise, callback){
-    console.log('QuestoesDAO = ', analise);
     await this._connection.collection('analise').insertOne(analise);
     callback();
 }
@@ -19,7 +18,7 @@ questoesDAO.prototype.getSaida = async function(){
 }
 
 questoesDAO.prototype.getAnalise = async function(){
-    const result = await this._connection.collection('analise').find();
+    const result = await this._connection.collection('analise').find().limit(1).sort({$natural:-1});
     return result;
 }
 
