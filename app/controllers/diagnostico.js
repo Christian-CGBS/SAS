@@ -16,6 +16,9 @@ module.exports.saida = async function(app, req, res) {
     var saidaModel = new app.app.models.questoesDAO(connection);
     const resultado_analise = await saidaModel.getAnalise();
     const analise = await resultado_analise.toArray();
+    
+    // convertendo datas para o formato BR ????
+    
     console.log('analise antes da saída ', analise);
     res.render("diagnostico/saida", {analise: analise[0]});
 }
@@ -91,11 +94,6 @@ module.exports.entrada_salvar = async function(app, req, res) {
         // pegando a data do documento (registro)
         
         data_registro = questoes[i].dt_registro;
-
-        // convertendo datas para o formato BR
-
-        //inicio = analise.dt_inicio.split('-').reverse().join('/');
-        //final = analise.dt_fim.split('-').reverse().join('/');
         
         // verificando se o documento se situa no intervalo de tempo informado
         
@@ -444,8 +442,8 @@ module.exports.entrada_salvar = async function(app, req, res) {
             {nome:"facilidade_aprendizagem", valor:analise.facilidade_aprendizagem}
         ]
 
-        criticidade.sort(function(a, b){return a.valor - b.valor});
-        analise.criticidade = criticidade;
+        criticidade.sort(function(a, b){return b.valor - a.valor});
+        // mostrar o array na saída ?????
 
         // Análise da variável sugestoes
         
@@ -470,7 +468,7 @@ module.exports.entrada_salvar = async function(app, req, res) {
             {
                 res.redirect('/saida');
             });       
-    } else {  // desvia para a tela de registros não encontrados
+    } else {  // desvia para a saída vazia se registros não encontrados
         res.redirect("/saida_vazia");        
     }
 }
