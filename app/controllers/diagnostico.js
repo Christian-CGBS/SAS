@@ -39,7 +39,7 @@ module.exports.saida = async function(app, req, res) {
     f = new Date(analise[0].dt_fim);
     analise[0].dt_fim = f.toLocaleDateString('pt-BR', {timeZone: 'UTC'});
         
-    console.log('ANALISE antes da saída ', analise, criticidade);
+    //console.log('ANALISE antes da saída ', analise, criticidade);
     res.render("diagnostico/saida", {analise: analise[0], criticidade});
 }
 
@@ -47,7 +47,7 @@ module.exports.entrada_salvar = async function(app, req, res) {
     // verifica os dados de entrada ANALISE
 
     var analise = req.body;
-    console.log('como chegam os dados de entrada de ANALISE:', analise);
+    //console.log('como chegam os dados de entrada de ANALISE:', analise);
     req.assert('sistema', 'O nome do sistema é obrigatório').notEmpty();
     req.assert('dt_inicio', 'A data de início é obrigatória').isDate();
     req.assert('dt_fim', 'A data de fim é obrigatória').isDate();
@@ -305,13 +305,21 @@ module.exports.entrada_salvar = async function(app, req, res) {
         } else {
             console.log('registro ',i, ' não pertence ao período de pesquisa informado');
         }
-    
+        // quantidade de respostas é igual a 21 menos as zeradas
         qt_resp_usuario_interno += (21 - qt_resp_usuario_interno_zerada);
         if (qt_usuario_externo > 0) {
             qt_resp_usuario_externo += (21 - qt_resp_usuario_externo_zerada);
         }         
     
-    }  /// fim da estrutura (laço - "for") que examina as questões de um formulário
+    }  // fim da estrutura (laço - "for") que examina as questões de um formulário
+
+    // não trata se a quantidade de usuários externos for maior que a informada na entrada,
+    // apenas informa a advertência na saída
+    if (qt_usuario_externo > analise.qt_resp_ext) {
+        analise.advertencia = 'número de usuários externos maior que o informado!';
+    } else {
+        analise.advertencia = '';
+    }
     
     qt_resp = qt_usuario_interno + qt_usuario_externo;  // total de respondentes
         
@@ -480,6 +488,22 @@ module.exports.entrada_salvar = async function(app, req, res) {
         2.3) ver a frequência com que aparecem;
         2.4) retornar o resultado segmentado por núcleos factuais. */
 
+        sugestoes = sugestoes.trim(); // tirando espaços em branco das extremidades da cadeia de caracteres
+        contador = sugestoes.split(" ").length; // conta as palavras na string
+        palavras = sugestoes.split(" "); // pega as palavras e joga num array de substrings
+
+        //console.log('em "',sugestoes,'" há ', contador, ' palavras');
+        //console.log(palavras);
+
+        repetidas = {};             // pega a frequência das palavras repetidas em ordem decrescente
+        for (let i=0; i < contador; i++) {
+            repetidas[palavras[i]] = sugestoes.match(new RegExp(palavras[i],'gi')).length; 
+        }
+        const resultado = Object.entries(repetidas).sort(([,a],[,b]) => b-a);
+        console.log('palavras que mais aparecem:')
+        console.log(resultado);
+        //pegar apenas as palavras com mais de três caracteres???
+        
         // pega a data e salva os dados da ANALISE
         
         var d = new Date();
