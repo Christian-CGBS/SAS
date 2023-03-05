@@ -18,7 +18,6 @@ module.exports.saida = async function(app, req, res) {
     const analise = await resultado_analise.toArray();
 
     // apresentar os aspectos de maior criticidade em ordem crescente //
-
     const criticidade = [
         {nome:"normatividade", valor:analise[0].normatividade},
         {nome:"compreensao", valor:analise[0].compreensao},
@@ -301,7 +300,7 @@ module.exports.entrada_salvar = async function(app, req, res) {
                     qt_resp_usuario_externo_zerada ++;
                 }                         
             }
-            sugestoes = questoes[i].questao_22 + " " + sugestoes; // acumulação das sugestoes (texto)
+            sugestoes = sugestoes + " " + questoes[i].questao_22; // acumulação das sugestoes (texto)
 
         } else {
             console.log('registro ',i, ' não pertence ao período de pesquisa informado');
