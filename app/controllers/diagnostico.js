@@ -16,11 +16,32 @@ module.exports.saida = async function(app, req, res) {
     var saidaModel = new app.app.models.questoesDAO(connection);
     const resultado_analise = await saidaModel.getAnalise();
     const analise = await resultado_analise.toArray();
-    
-    // convertendo datas para o formato BR ????
-    
-    console.log('analise antes da saída ', analise);
-    res.render("diagnostico/saida", {analise: analise[0]});
+
+    // apresentar os aspectos de maior criticidade em ordem crescente //
+
+    const criticidade = [
+        {nome:"normatividade", valor:analise[0].normatividade},
+        {nome:"compreensao", valor:analise[0].compreensao},
+        {nome:"exatidao", valor:analise[0].exatidao},
+        {nome:"utilidade", valor:analise[0].utilidade},
+        {nome:"confiabilidade", valor:analise[0].confiabilidade},
+        {nome:"atualidade", valor:analise[0].atualidade},
+        {nome:"rapidez", valor:analise[0].rapidez},
+        {nome:"completude", valor:analise[0].completude},
+        {nome:"satisfacao", valor:analise[0].satisfacao},
+        {nome:"facilidade_uso", valor:analise[0].facilidade_uso},
+        {nome:"facilidade_aprendizagem", valor:analise[0].facilidade_aprendizagem}
+    ]
+    criticidade.sort(function(a, b){return a.valor - b.valor});
+
+    // convertendo as datas de início e fim da pesquisa para o formato BR
+    i = new Date(analise[0].dt_inicio);
+    analise[0].dt_inicio = i.toLocaleDateString('pt-BR', {timeZone: 'UTC'});
+    f = new Date(analise[0].dt_fim);
+    analise[0].dt_fim = f.toLocaleDateString('pt-BR', {timeZone: 'UTC'});
+        
+    console.log('ANALISE antes da saída ', analise, criticidade);
+    res.render("diagnostico/saida", {analise: analise[0], criticidade});
 }
 
 module.exports.entrada_salvar = async function(app, req, res) {
@@ -46,24 +67,27 @@ module.exports.entrada_salvar = async function(app, req, res) {
     var questoes = await resultado_saida.toArray();
     
     // convertendo as variáveis de string para numérico
-    
-    analise.qt_resp_int = Number(analise.qt_resp_int);
-    analise.qt_resp_ext = Number(analise.qt_resp_ext);
+                                                // dados informados na entrada do diagnóstico
+    analise.qt_resp_int = Number(analise.qt_resp_int); // quantidade de respondentes internos
+    analise.qt_resp_ext = Number(analise.qt_resp_ext); // quantidade de respondentes externos
     
     // inicialização de variáveis
 
     var sugestoes = "";
 
-    var qt_usuario_interno = 0;
-    var qt_resp_usuario_interno = 0;
-    var qt_resp_usuario_interno_zerada = 0;
-    var soma_usuario_interno = 0;
+    var qt_usuario_interno = 0;              // (a) quantidade de usuários internos que responderam
+                                             //  servirá para o cálculo da amostra junto com qt_resp_int
+    var qt_resp_usuario_interno = 0;         // (b) quantidade de respostas dos usuários internos
+    var qt_resp_usuario_interno_zerada = 0;  // (c) quantidade de respostas dos usuários internos ZERADAS
+    var soma_usuario_interno = 0;            // (d) soma dos valores das questões dos usuários internos
+                                             //         MÉDIA = d / (b - c)
 
-    var qt_usuario_externo = 0;
-    var qt_resp_usuario_externo = 0;
-    var qt_resp_usuario_externo_zerada = 0;
-    var soma_usuario_externo = 0;
-
+    var qt_usuario_externo = 0;              // (a) quantidade de usuários externos que responderam
+                                             //  servirá para o cálculo da amostra junto com qt_resp_ext
+    var qt_resp_usuario_externo = 0;         // (b) quantidade de respostas dos usuários externos
+    var qt_resp_usuario_externo_zerada = 0;  // (c) quantidade de respostas dos usuários externos ZERADAS
+    var soma_usuario_externo = 0;            // (d) soma dos valores das questões dos usuários externos
+                                             //         MÉDIA = d / (b - c)
     var calc_r1 = 0;
     var calc_r2 = 0;
     var calc_r3 = 0;
@@ -141,7 +165,7 @@ module.exports.entrada_salvar = async function(app, req, res) {
                 soma_usuario_interno += soma_questao; // somas dos usuários internos
                 qt_usuario_interno++;
 
-                // deduzir a quantidade de respostas iguais a zero ("não se aplica")
+                // obter a quantidade de respostas iguais a zero ("não se aplica")
 
                 if (questoes[i].questao_01 == 0) {
                     qt_resp_usuario_interno_zerada ++;
@@ -211,7 +235,7 @@ module.exports.entrada_salvar = async function(app, req, res) {
                 soma_usuario_externo += soma_questao; // somas dos usuários externos
                 qt_usuario_externo++;
 
-                // deduzir a quantidade de respostas iguais a zero ("não se aplica")
+                // obter a quantidade de respostas iguais a zero ("não se aplica")
 
                 if (questoes[i].questao_01 == 0) {
                     qt_resp_usuario_externo_zerada ++;
@@ -282,10 +306,16 @@ module.exports.entrada_salvar = async function(app, req, res) {
         } else {
             console.log('registro ',i, ' não pertence ao período de pesquisa informado');
         }
-    }
+    
+        qt_resp_usuario_interno += (21 - qt_resp_usuario_interno_zerada);
+        if (qt_usuario_externo > 0) {
+            qt_resp_usuario_externo += (21 - qt_resp_usuario_externo_zerada);
+        }         
+    
+    }  /// fim da estrutura (laço - "for") que examina as questões de um formulário
     
     qt_resp = qt_usuario_interno + qt_usuario_externo;  // total de respondentes
-    
+        
     if (qt_resp > 0) { // só analisa se houver documentos selecionados
 
         // cálculo do tamanho das amostras mínimas
@@ -301,10 +331,10 @@ module.exports.entrada_salvar = async function(app, req, res) {
             amostra_externos = 0;
         }
         
-        if (amostra_internos <= analise.qt_resp_int && amostra_externos <= analise.qt_resp_ext) {
-            analise.amostra_significativa = true;
+        if (amostra_internos <= qt_usuario_interno && amostra_externos <= qt_usuario_externo) {
+            analise.amostra_significativa = "S";
         } else {
-            analise.amostra_significativa = false;
+            analise.amostra_significativa = "N";
         }
         
         // cálculo da admissão da amostra = análise de congruência    
@@ -368,6 +398,14 @@ module.exports.entrada_salvar = async function(app, req, res) {
         analise.qt_resp = qt_usuario_interno + qt_usuario_externo;
         analise.sugestoes = sugestoes;
 
+        console.log ('var soma_usuario_interno = ', soma_usuario_interno);
+        console.log('var qt_resp_usuario_interno = ', qt_resp_usuario_interno);
+        console.log('var qt_resp_usuario_interno_zerada = ', qt_resp_usuario_interno_zerada);
+
+        console.log ('var soma_usuario_externo = ', soma_usuario_externo);
+        console.log('var qt_resp_usuario_externo = ', qt_resp_usuario_externo);
+        console.log('var qt_resp_usuario_externo_zerada = ', qt_resp_usuario_externo_zerada);
+
         analise.nota_usuario_interno = soma_usuario_interno / (qt_resp_usuario_interno-qt_resp_usuario_interno_zerada);
 
         if (qt_usuario_externo > 0) {
@@ -409,8 +447,13 @@ module.exports.entrada_salvar = async function(app, req, res) {
         } else if (analise.nota_final < 63) {
             analise.resultado = "sistema precisa de ajustes";
         } else {
-            analise.resultado = "sistema não necessita de alterações";
+            analise.resultado = "sistema não necessita de alterações";               
         }
+        
+        // arrendondando para duas casas decimais as notas obtidas
+        analise.nota_usuario_interno = analise.nota_usuario_interno.toFixed(2);
+        analise.nota_usuario_externo = analise.nota_usuario_externo.toFixed(2);
+        analise.nota_final = analise.nota_final.toFixed(2);
 
         // salvar as variáveis dos aspectos de maior criticidade //
         
@@ -426,25 +469,6 @@ module.exports.entrada_salvar = async function(app, req, res) {
         analise.facilidade_uso = facilidade_uso;
         analise.facilidade_aprendizagem = facilidade_aprendizagem;
         
-        // apresentar os aspectos de maior criticidade em ordem crescente //
-
-        const criticidade = [
-            {nome:"normatividade", valor:analise.normatividade},
-            {nome:"compreensao", valor:analise.compreensao},
-            {nome:"exatidao", valor:analise.exatidao},
-            {nome:"utilidade", valor:analise.utilidade},
-            {nome:"confiabilidade", valor:analise.confiabilidade},
-            {nome:"atualidade", valor:analise.atualidade},
-            {nome:"rapidez", valor:analise.rapidez},
-            {nome:"completude", valor:analise.completude},
-            {nome:"satisfacao", valor:analise.satisfacao},
-            {nome:"facilidade_uso", valor:analise.facilidade_uso},
-            {nome:"facilidade_aprendizagem", valor:analise.facilidade_aprendizagem}
-        ]
-
-        criticidade.sort(function(a, b){return b.valor - a.valor});
-        // mostrar o array na saída ?????
-
         // Análise da variável sugestoes
         
         /* 1. separar em núcleos factuais:
@@ -456,8 +480,6 @@ module.exports.entrada_salvar = async function(app, req, res) {
         2.2) extrair palavras dos campos sugestoes (palavras acima de três letras);
         2.3) ver a frequência com que aparecem;
         2.4) retornar o resultado segmentado por núcleos factuais. */
-
-
 
         // pega a data e salva os dados da ANALISE
         

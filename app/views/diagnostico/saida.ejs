@@ -18,14 +18,22 @@
         <p>Sistema avaliado: <%= analise.sistema %> </p>       
                 
         <p>Período pesquisado: início em <%= analise.dt_inicio %> término em <%= analise.dt_fim %></p>
-        <p>Total de usuários respondentes= <%= analise.qt_resp %></p>
+        <p>Total de usuários respondentes : <%= analise.qt_resp %></p>
         <p>Amostra significativa ? [S/N] <%= analise.amostra_significativa %></p>
         <p>Grau de congruência [0 a 9] <%= analise.grau_congruencia %></p>
         <p>Pontuação média final dos usuários:</p>
-        <p>usuários internos= <%= analise.nota_usuarios_internos %> <%= analise.resultado_ui %></p>
-        <p>usuários externos= <%= analise.nota_usuarios_externos %> <%= analise.resultado_ue %> (se aplicável)</p>
-        <p>Pontuação média global= <%= analise.nota_final %> <%= analise.resultado %></p>
-        <p>Itens de maior criticidade: <%= analise.criticidade %></p>
+        <p>usuários internos : <%= analise.nota_usuario_interno %> => <%= analise.resultado_ui %></p>
+        <p>usuários externos (se aplicável) : <%= analise.nota_usuario_externo %> => <%= analise.resultado_ue %></p>
+        <p>Pontuação média global : <%= analise.nota_final %> => <strong><%= analise.resultado %></strong></p>
+        <p>Itens de maior criticidade:</p>
+        <ul type="none">
+            <% for (var i=0; i < criticidade.length; i++) { %>
+                <li>
+                    <%= criticidade[i].nome %> = <%= criticidade[i].valor %>
+                </li>
+            <% } %>
+        </ul>
+
         <p>Sugestões recebidas: [?????] </p>        
     
     </main>
