@@ -316,7 +316,7 @@ module.exports.entrada_salvar = async function(app, req, res) {
     // não trata se a quantidade de usuários externos for maior que a informada na entrada,
     // apenas informa a advertência na saída
     if (qt_usuario_externo > analise.qt_resp_ext) {
-        analise.advertencia = 'número de usuários externos maior que o informado!';
+        analise.advertencia = 'ATENÇÃO: número de usuários externos maior que o informado!';
     } else {
         analise.advertencia = '';
     }
@@ -495,14 +495,13 @@ module.exports.entrada_salvar = async function(app, req, res) {
         //console.log('em "',sugestoes,'" há ', contador, ' palavras');
         //console.log(palavras);
 
-        repetidas = {};             // pega a frequência das palavras repetidas em ordem decrescente
-        for (let i=0; i < contador; i++) {
+        repetidas = {};                        // pega a frequência das palavras repetidas em ordem decrescente
+        for (let i=0; i < contador; i++) {     // considera apenas as palavras com mais de 3 caracteres
             repetidas[palavras[i]] = sugestoes.match(new RegExp(palavras[i],'gi')).length; 
         }
-        const resultado = Object.entries(repetidas).sort(([,a],[,b]) => b-a);
+        const resultado = Object.entries(repetidas).sort(([,a],[,b]) => b-a).filter(([,a]) => a.length>3);
         console.log('palavras que mais aparecem:')
-        console.log(resultado);
-        //pegar apenas as palavras com mais de três caracteres???
+        console.log(resultado);        
         
         // pega a data e salva os dados da ANALISE
         

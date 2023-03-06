@@ -11,5 +11,5 @@ repetidas = {};
 for (let i=0; i < contador; i++) {
     repetidas[palavras[i]] = sugestao.match(new RegExp(palavras[i],'gi')).length; 
 }
-const resultado = Object.entries(repetidas).sort(([,a],[,b]) => b-a);
+const resultado = Object.entries(repetidas).sort(([,a],[,b]) => b-a).filter(([,a]) => a.length>2);;
 console.log(resultado);
