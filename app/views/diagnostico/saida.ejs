@@ -34,7 +34,14 @@
                 </li>
             <% } %>
         </ul>
-        <p>Sugestões recebidas: [?????] </p>        
+        <p>Sugestões recebidas: [10 palavras que mais aparecem] </p>
+        <ul type="none">
+            <% for (var i=0; i < final.length; i++) { %>
+                <li>
+                    <%= final[i] %>
+                </li>
+            <% } %>
+        </ul>
     
     </main>
     <footer>

@@ -33,6 +33,33 @@ module.exports.saida = async function(app, req, res) {
     ]
     criticidade.sort(function(a, b){return a.valor - b.valor});
 
+    // Análise da variável sugestoes
+        
+    /* 1. separar em núcleos factuais:
+    a) sugestoes_usuarios_internos e sugestoes_usuarios_externos
+    b) sugestoes_usuarios_experientes e sugestoes_usuarios_neofitos */
+    /* 2. extrair palavras relevantes:
+    2.1) selecionar os aspectos de maior criticidade; 
+    2.2) extrair palavras dos campos sugestoes (palavras acima de três letras);
+    2.3) ver a frequência com que aparecem;
+    2.4) retornar o resultado segmentado por núcleos factuais. */
+
+    sugestoes = analise[0].sugestoes.trim(); // tirando espaços em branco das extremidades da cadeia de caracteres
+    contador = sugestoes.split(" ").length; // conta as palavras na string
+    palavras = sugestoes.split(" "); // pega as palavras e joga num array de substrings
+
+    //console.log('em "',sugestoes,'" há ', contador, ' palavras');
+    //console.log(palavras);
+
+    repetidas = {};                // pega a frequência das palavras repetidas em ordem decrescente
+    for (let i=0; i < contador; i++) {     // considera apenas as palavras com mais de 3 caracteres
+        repetidas[palavras[i]] = sugestoes.match(new RegExp(palavras[i],'gi')).length; 
+    }
+    const resultado = Object.entries(repetidas).sort(([,a],[,b]) => b-a).filter(([a]) => a.length>3);
+    console.log('palavras que mais aparecem:')
+    const final = resultado.slice(0, 10); // pegando as 10 primeiras palavras
+    console.log(final);
+
     // convertendo as datas de início e fim da pesquisa para o formato BR
     i = new Date(analise[0].dt_inicio);
     analise[0].dt_inicio = i.toLocaleDateString('pt-BR', {timeZone: 'UTC'});
@@ -40,7 +67,7 @@ module.exports.saida = async function(app, req, res) {
     analise[0].dt_fim = f.toLocaleDateString('pt-BR', {timeZone: 'UTC'});
         
     //console.log('ANALISE antes da saída ', analise, criticidade);
-    res.render("diagnostico/saida", {analise: analise[0], criticidade});
+    res.render("diagnostico/saida", {analise: analise[0], criticidade, final});
 }
 
 module.exports.entrada_salvar = async function(app, req, res) {
@@ -475,34 +502,7 @@ module.exports.entrada_salvar = async function(app, req, res) {
         analise.satisfacao = satisfacao;
         analise.facilidade_uso = facilidade_uso;
         analise.facilidade_aprendizagem = facilidade_aprendizagem;
-        
-        // Análise da variável sugestoes
-        
-        /* 1. separar em núcleos factuais:
-        a) sugestoes_usuarios_internos e sugestoes_usuarios_externos
-        b) sugestoes_usuarios_experientes e sugestoes_usuarios_neofitos */
-
-        /* 2. extrair palavras relevantes:
-        2.1) selecionar os aspectos de maior criticidade; 
-        2.2) extrair palavras dos campos sugestoes (palavras acima de três letras);
-        2.3) ver a frequência com que aparecem;
-        2.4) retornar o resultado segmentado por núcleos factuais. */
-
-        sugestoes = sugestoes.trim(); // tirando espaços em branco das extremidades da cadeia de caracteres
-        contador = sugestoes.split(" ").length; // conta as palavras na string
-        palavras = sugestoes.split(" "); // pega as palavras e joga num array de substrings
-
-        //console.log('em "',sugestoes,'" há ', contador, ' palavras');
-        //console.log(palavras);
-
-        repetidas = {};                        // pega a frequência das palavras repetidas em ordem decrescente
-        for (let i=0; i < contador; i++) {     // considera apenas as palavras com mais de 3 caracteres
-            repetidas[palavras[i]] = sugestoes.match(new RegExp(palavras[i],'gi')).length; 
-        }
-        const resultado = Object.entries(repetidas).sort(([,a],[,b]) => b-a).filter(([,a]) => a.length>3);
-        console.log('palavras que mais aparecem:')
-        console.log(resultado);        
-        
+                                
         // pega a data e salva os dados da ANALISE
         
         var d = new Date();
