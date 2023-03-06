@@ -1,8 +1,13 @@
+/* conexão com o banco de dados */
+
 const dbConnection = require('../../config/dbConnection');
+
+/* função de entrada do formulário */
 
 module.exports.formulario = function(app, req, res) {
     res.render("questionario/formulario", {validacao : {}, questoes : {} });
     }
+/* função que critica e salva os dados do fomulário */
 
 module.exports.questoes_salvar = async function(app, req, res){
     var questoes = req.body;
@@ -39,7 +44,7 @@ module.exports.questoes_salvar = async function(app, req, res){
         res.render("questionario/formulario", {validacao : erros, questoes : questoes});
         return;
     }
-    
+
     // convertendo as questoes de string para numérico, antes de salvar
 
     questoes.questao_01 = Number(questoes.questao_01);
@@ -68,7 +73,7 @@ module.exports.questoes_salvar = async function(app, req, res){
     questoes.identificacao_03 = Number(questoes.identificacao_03);
     questoes.identificacao_04 = Number(questoes.identificacao_04);
 
-    // pegar data atual e salvar
+    // pega e salva a data atual
 
     var d = new Date();
     questoes.dt_registro = d.toISOString();

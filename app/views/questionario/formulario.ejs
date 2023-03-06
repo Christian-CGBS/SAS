@@ -27,10 +27,40 @@
                     <% } %>
                 </ul>
             <% } %>
-        </article>
+        </article>      
         
         <form action="/questoes/salvar" method="post">
             <input type="hidden" id="sistema" name="sistema" value="GESP">
+
+            <!-- configuração MULTI-STEP FORM -->
+
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-11 col-sm-10 col-md-10 col-lg-6 col-xl-5 text-center p-0 mt-3 mb-2">
+                        <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
+                            <form id="msform">                           
+
+                                <!-- progressbar -->
+                                <ul id="progressbar">
+                                    <li class="active" id="account"><strong>DADOS</strong></li>
+                                    <li id="personal"><strong>SISTEMA - Parte 1</strong></li>
+                                    <li id="payment"><strong>SISTEMA - Parte 2</strong></li>
+                                    <li id="confirm"><strong>IDENTIFICAÇÃO</strong></li>
+                                </ul>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div> <br> <!-- fieldsets -->
+                                
+            <fieldset>                                
+            <div class="form-card">
+                <div class="row">
+                    <div class="col-7">
+                        <h2 class="fs-title">DADOS:</h2>
+                    </div>
+                    <div class="col-5">
+                        <h2 class="steps">Passo 1 - 4</h2>
+                    </div>
+                </div>
 
             <h4>Seção I - Dados e informações que o sistema proporciona</h4>
             
@@ -129,6 +159,22 @@
             <label for="questao_08">Concordo totalmente</label>
             <input type="radio" name="questao_08" id="questao_08" value="0">
             <label for="questao_08">Não se aplica <br></label>
+            </div>
+            
+            <input type="button" name="next" class="next action-button" value="Next" />
+
+            </fieldset>
+
+            <fieldset>
+            <div class="form-card">
+                <div class="row">
+                    <div class="col-7">
+                        <h2 class="fs-title">SISTEMA - Parte 1:</h2>
+                        </div>
+                    <div class="col-5">
+                        <h2 class="steps">Passo 2 - 4</h2>
+                    </div>
+                </div> 
             
             <h4>Seção II - Uso do Sistema</h4>
             
@@ -215,6 +261,23 @@
             <label for="questao_15">Concordo totalmente</label>
             <input type="radio" name="questao_15" id="questao_15" value="0">
             <label for="questao_15">Não se aplica</label>
+            </div>
+            
+            <input type="button" name="next" class="next action-button" value="Next" />
+            <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+
+            </fieldset>
+
+            <fieldset>
+                <div class="form-card">
+                    <div class="row">
+                        <div class="col-7">
+                            <h2 class="fs-title">SISTEMA - Parte 2:</h2>
+                        </div>
+                        <div class="col-5">
+                            <h2 class="steps">Passo 3 - 4</h2>
+                        </div>
+                    </div> 
 
             <p>16) Não necessito da ajuda de terceiros para usar o sistema <br></p>
             <input type="radio" name="questao_16" id="questao_16" value="1">
@@ -289,6 +352,22 @@
             <label for="questao_21">Não se aplica</label>
             <p>22) Sugestões de melhoria : 
             <input type="text" name="questao_22" id="questao_22" value=""> </p>
+            </div>
+
+            <input type="button" name="next" class="next action-button" value="Submit" /> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+
+            </fieldset>
+
+            <fieldset>
+                <div class="form-card">
+                    <div class="row">
+                        <div class="col-7">
+                            <h2 class="fs-title">IDENTIFICAÇÃO:</h2>
+                        </div>
+                        <div class="col-5">
+                            <h2 class="steps">Passo 4 - 4</h2>
+                        </div>
+                    </div>             
             
             <h4>Seção III - Identificação</h4>
 
@@ -328,14 +407,29 @@
             <input type="radio" name="identificacao_04" id="identificacao_04" value="3">
             <label for="identificacao_04">pós-graduação</label>
             
-            <p>5) E-mail: <input type="email" name="identificacao_05" id="identificacao_05" value=""> </p>        
-            
-            <input type="submit" value="prosseguir" id="botao">
-        </form>
+            <p>5) E-mail: <input type="email" name="identificacao_05" id="identificacao_05" value=""> </p>            
+            </div>
 
+            <input type="button" name="next" class="next action-button" value="Submit" /> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+
+            </fieldset>
+            
+            <input type="submit" value="Finalizar" id="botao">
+
+                    </form>
+        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
     <footer>
         <p>Christian Gomes Bezerra dos Santos / christian.gomes@ufpe.br</p>
     </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="/scripts.js"></script>
+
 </body>
 </html>
