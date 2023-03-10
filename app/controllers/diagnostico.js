@@ -348,7 +348,7 @@ module.exports.entrada_salvar = async function(app, req, res) {
         // apenas informa a advertência na saída
         
         if (qt_usuario_externo > analise.qt_resp_ext) {
-            analise.advertencia = 'ATENÇÃO: número de usuários externos maior que o informado!';
+            analise.advertencia = '/ ATENÇÃO: número de usuários externos maior que o informado!';
         } else {
             analise.advertencia = '';
         }
@@ -356,16 +356,18 @@ module.exports.entrada_salvar = async function(app, req, res) {
         // cálculo do tamanho das amostras mínimas
         // analise.qt_resp_int > 0 (quantidade de usuários internos é sempre positiva)
 
-        amostra_internos = (analise.qt_resp_int * 0.5 * 1.96**2) / ((0.5 * 1.96**2) + (analise.qt_resp_int-1) * 0.05**2);
+        amostra_internos = (analise.qt_resp_int * 0.25 * 1.96**2) / ((0.25 * 1.96**2) + (analise.qt_resp_int-1) * 0.05**2);
 
         // a amostra para usuários externos só é calculada se analise.qt_resp_ext > 0
 
         if (analise.qt_resp_ext > 0) {
-            amostra_externos = (analise.qt_resp_ext * 0.5 * 1.96**2) / ((0.5 * 1.96**2) + (analise.qt_resp_ext-1) * 0.05**2);
+            amostra_externos = (analise.qt_resp_ext * 0.25 * 1.96**2) / ((0.25 * 1.96**2) + (analise.qt_resp_ext-1) * 0.05**2);
         } else {
             amostra_externos = 0;
         }
         
+        // a amostra é significativa se a quantidade de respondentes é superior à mínima calculada
+
         if (amostra_internos <= qt_usuario_interno && amostra_externos <= qt_usuario_externo) {
             analise.amostra_significativa = "S";
         } else {
@@ -426,7 +428,13 @@ module.exports.entrada_salvar = async function(app, req, res) {
         }    
         if (z7 > 1.96) {
             grau_congruencia++;
-        }    
+        }
+
+        // o grau de congruência requer um tamanho amostral mínimo de 20
+
+        if (qt_resp_ext < 20) {
+            analise.advertencia += '/ ATENÇÃO: grau de congruência requer uma amostra mínima de 20 (vinte) respondentes!';
+        }
     
         // resultados das variáveis de análise //
 
