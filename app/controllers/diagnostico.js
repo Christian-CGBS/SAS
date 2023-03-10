@@ -114,9 +114,10 @@ module.exports.entrada_salvar = async function(app, req, res) {
     var qt_resp_usuario_externo_zerada = 0;  // (c) quantidade de respostas dos usuários externos ZERADAS
     var soma_usuario_externo = 0;            // (d) soma dos valores das questões dos usuários externos
                                              //         MÉDIA = d / (b - c)
-    var calc_r1 = 0;
+
+    var calc_r1 = 0;  // variáveis para o cálculo do grau de congruência do formulário
     var calc_r2 = 0;
-    var calc_r3 = 0;
+    var calc_r3 = 0;  // cálculo da correlação de postos de Spearman
     var calc_r41 = 0;
     var calc_r42 = 0;
     var calc_r43 = 0;
@@ -256,7 +257,9 @@ module.exports.entrada_salvar = async function(app, req, res) {
                 if (questoes[i].questao_21 == 0) {
                     qt_resp_usuario_interno_zerada ++;
                 }
-                
+                // quantidade de respostas é igual a 21
+                qt_resp_usuario_interno += 21;        
+                                                
             } else {
                 soma_usuario_externo += soma_questao; // somas dos usuários externos
                 qt_usuario_externo++;
@@ -325,33 +328,31 @@ module.exports.entrada_salvar = async function(app, req, res) {
                 }    
                 if (questoes[i].questao_21 == 0) {
                     qt_resp_usuario_externo_zerada ++;
-                }                         
+                }
+                // quantidade de respostas é igual a 21
+                qt_resp_usuario_externo += 21;
             }
             sugestoes = sugestoes + " " + questoes[i].questao_22; // acumulação das sugestoes (texto)
-
+            
         } else {
             console.log('registro ',i, ' não pertence ao período de pesquisa informado');
-        }
-        // quantidade de respostas é igual a 21 menos as zeradas
-        qt_resp_usuario_interno += (21 - qt_resp_usuario_interno_zerada);
-        if (qt_usuario_externo > 0) {
-            qt_resp_usuario_externo += (21 - qt_resp_usuario_externo_zerada);
-        }         
-    
-    }  // fim da estrutura (laço - "for") que examina as questões de um formulário
+        }        
 
-    // não trata se a quantidade de usuários externos for maior que a informada na entrada,
-    // apenas informa a advertência na saída
-    if (qt_usuario_externo > analise.qt_resp_ext) {
-        analise.advertencia = 'ATENÇÃO: número de usuários externos maior que o informado!';
-    } else {
-        analise.advertencia = '';
-    }
+    }  // fim da estrutura (laço - "for") que examina as questões de um formulário
     
     qt_resp = qt_usuario_interno + qt_usuario_externo;  // total de respondentes
         
     if (qt_resp > 0) { // só analisa se houver documentos selecionados
 
+        // não trata se a quantidade de usuários externos for maior que a informada na entrada,
+        // apenas informa a advertência na saída
+        
+        if (qt_usuario_externo > analise.qt_resp_ext) {
+            analise.advertencia = 'ATENÇÃO: número de usuários externos maior que o informado!';
+        } else {
+            analise.advertencia = '';
+        }
+        
         // cálculo do tamanho das amostras mínimas
         // analise.qt_resp_int > 0 (quantidade de usuários internos é sempre positiva)
 
@@ -371,7 +372,7 @@ module.exports.entrada_salvar = async function(app, req, res) {
             analise.amostra_significativa = "N";
         }
         
-        // cálculo da admissão da amostra = análise de congruência    
+        // cálculo da admissão da amostra = aferição de congruência    
         // variáveis de congruência: r1, r2, r3, r41, r42, r43, r5, r6 e r7
         // cálculo da correlação de postos de Spearman
 
@@ -425,7 +426,7 @@ module.exports.entrada_salvar = async function(app, req, res) {
         }    
         if (z7 > 1.96) {
             grau_congruencia++;
-        }
+        }    
     
         // resultados das variáveis de análise //
 
@@ -440,16 +441,20 @@ module.exports.entrada_salvar = async function(app, req, res) {
         console.log('var qt_resp_usuario_externo = ', qt_resp_usuario_externo);
         console.log('var qt_resp_usuario_externo_zerada = ', qt_resp_usuario_externo_zerada);
 
-        analise.nota_usuario_interno = soma_usuario_interno / (qt_resp_usuario_interno-qt_resp_usuario_interno_zerada);
+        analise.nota_usuario_interno = soma_usuario_interno / qt_usuario_interno;
 
         if (qt_usuario_externo > 0) {
-            analise.nota_usuario_externo = soma_usuario_externo / (qt_resp_usuario_externo-qt_resp_usuario_externo_zerada);
+            analise.nota_usuario_externo = soma_usuario_externo / qt_usuario_externo;
             analise.nota_final = (analise.nota_usuario_interno * 7 + analise.nota_usuario_externo * 3) / 10;
         } else {
             analise.nota_usuario_externo = 0;
             analise.nota_final = analise.nota_usuario_interno;
         }    
         
+        console.log('média internos: ', analise.nota_usuario_interno);
+        console.log('média externos: ', analise.nota_usuario_externo);
+        console.log('média final: ', analise.nota_final);
+
         analise.grau_congruencia = grau_congruencia;
 
         // resultado usuários internos e externos //
@@ -485,6 +490,7 @@ module.exports.entrada_salvar = async function(app, req, res) {
         }
         
         // arrendondando para duas casas decimais as notas obtidas
+        
         analise.nota_usuario_interno = analise.nota_usuario_interno.toFixed(2);
         analise.nota_usuario_externo = analise.nota_usuario_externo.toFixed(2);
         analise.nota_final = analise.nota_final.toFixed(2);
