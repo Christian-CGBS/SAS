@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Avaliação de SI</title>
+    <link rel="stylesheet" href="/style.css">
+    
+</head>
+<body>
+    <header>
+        <h1>Avaliação de Sistemas de Informação</h1>
+    </header>
+
+    <main>
+        <h2>Sistema avaliado : GESP - Polícia Federal</h2>
+        <h3>Questionário</h3>        
+        
+        <article>
+            <% if (validacao) { %>
+                <ul>
+                    <% for (var i=0; i < validacao.length; i++) { %>
+                        <li>
+                            <%= validacao[i].msg %>
+                        </li>
+                    <% } %>
+                </ul>
+            <% } %>
+        </article>      
+        
+        <form action="/questoes/salvar" method="post">
+            <input type="hidden" id="sistema" name="sistema" value="GESP">
+
+            <!-- configuração MULTI-STEP FORM -->
+
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-11 col-sm-10 col-md-10 col-lg-6 col-xl-5 text-center p-0 mt-3 mb-2">
+                        <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
+                            <form id="msform">                           
+
+                                <!-- progressbar -->
+                                <ul id="progressbar">
+                                    <li class="active" id="account"><strong>Parte 1</strong></li>
+                                    <li id="personal"><strong>Parte 2</strong></li>
+                                    <li id="payment"><strong>Parte 3</strong></li>
+                                    <li id="confirm"><strong>parte 4</strong></li>
+                                </ul>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div> <br> <!-- fieldsets -->
+                                
+            <fieldset>                                
+            <div class="form-card">
+                <div class="row">
+                    <div class="col-7">
+                        <h2 class="fs-title">DADOS:</h2>
+                    </div>
+                    <div class="col-5">
+                        <h2 class="steps">Passo 1 - 4</h2>
+                    </div>
+                </div>
+
+            <h4>Seção I - Dados e informações que o sistema proporciona</h4>
+            
+            <p>1) As informações que o sistema fornece são fáceis de entender <br></p>
+            <input type="radio" name="questao_01" id="questao_01" value="1">
+            <label for="questao_01">Discordo totalmente</label>
+            <input type="radio" name="questao_01" id="questao_01" value="2">
+            <label for="questao_01">Discordo em parte</label>
+            <input type="radio" name="questao_01" id="questao_01" value="3">
+            <label for="questao_01">Concordo em parte</label>
+            <input type="radio" name="questao_01" id="questao_01" value="4">
+            <label for="questao_01">Concordo totalmente</label>
+            <input type="radio" name="questao_01" id="questao_01" value="0">
+            <label for="questao_01">Não se aplica</label>
+                
+            <p>2) O sistema fornece as informações de que necessito  <br></p>
+            <input type="radio" name="questao_02" id="questao_02" value="1">
+            <label for="questao_02">Discordo totalmente</label>
+            <input type="radio" name="questao_02" id="questao_02" value="2">
+            <label for="questao_02">Discordo em parte</label>
+            <input type="radio" name="questao_02" id="questao_02" value="3">
+            <label for="questao_02">Concordo em parte</label>
+            <input type="radio" name="questao_02" id="questao_02" value="4">
+            <label for="questao_02">Concordo totalmente</label>
+            <input type="radio" name="questao_02" id="questao_02" value="0">
+            <label for="questao_02">Não se aplica</label>
+                
+            <p>3) As informações fornecidas pelo sistema podem ser usadas para várias finalidades <br></p>
+            <input type="radio" name="questao_03" id="questao_03" value="1">
+            <label for="questao_03">Discordo totalmente</label>
+            <input type="radio" name="questao_03" id="questao_03" value="2">
+            <label for="questao_03">Discordo em parte</label>
+            <input type="radio" name="questao_03" id="questao_03" value="3">
+            <label for="questao_03">Concordo em parte</label>
+            <input type="radio" name="questao_03" id="questao_03" value="4">
+            <label for="questao_03">Concordo totalmente</label>
+            <input type="radio" name="questao_03" id="questao_03" value="0">
+            <label for="questao_03">Não se aplica</label>
+            
+            <p>4) As informações fornecidas pelo sistema ajudam a tomar decisões <br></p>
+            <input type="radio" name="questao_04" id="questao_04" value="1">
+            <label for="questao_04">Discordo totalmente</label>
+            <input type="radio" name="questao_04" id="questao_04" value="2">
+            <label for="questao_04">Discordo em parte</label>
+            <input type="radio" name="questao_04" id="questao_04" value="3">
+            <label for="questao_04">Concordo em parte</label>
+            <input type="radio" name="questao_04" id="questao_04" value="4">
+            <label for="questao_04">Concordo totalmente</label>
+            <input type="radio" name="questao_04" id="questao_04" value="0">
+            <label for="questao_04">Não se aplica</label>
+
+            <p>5) Eu confio nas informações fornecidas pelo sistema <br></p>
+            <input type="radio" name="questao_05" id="questao_05" value="1">
+            <label for="questao_05">Discordo totalmente</label>
+            <input type="radio" name="questao_05" id="questao_05" value="2">
+            <label for="questao_05">Discordo em parte</label>
+            <input type="radio" name="questao_05" id="questao_05" value="3">
+            <label for="questao_05">Concordo em parte</label>
+            <input type="radio" name="questao_05" id="questao_05" value="4">
+            <label for="questao_05">Concordo totalmente</label>
+            <input type="radio" name="questao_05" id="questao_05" value="0">
+            <label for="questao_05">Não se aplica</label>
+            
+            <p>6) Não há excesso ou falta de dados nas informações fornecidas pelo sistema <br></p>
+            <input type="radio" name="questao_06" id="questao_06" value="1">
+            <label for="questao_06">Discordo totalmente</label>
+            <input type="radio" name="questao_06" id="questao_06" value="2">
+            <label for="questao_06">Discordo em parte</label>
+            <input type="radio" name="questao_06" id="questao_06" value="3">
+            <label for="questao_06">Concordo em parte</label>
+            <input type="radio" name="questao_06" id="questao_06" value="4">
+            <label for="questao_06">Concordo totalmente</label>
+            <input type="radio" name="questao_06" id="questao_06" value="0">
+            <label for="questao_06">Não se aplica</label>
+            
+            <p>7) As informações fornecidas pelo sistema estão sempre atualizadas <br></p>
+            <input type="radio" name="questao_07" id="questao_07" value="1">
+            <label for="questao_07">Discordo totalmente</label>
+            <input type="radio" name="questao_07" id="questao_07" value="2">
+            <label for="questao_07">Discordo em parte</label>
+            <input type="radio" name="questao_07" id="questao_07" value="3">
+            <label for="questao_07">Concordo em parte</label>
+            <input type="radio" name="questao_07" id="questao_07" value="4">
+            <label for="questao_07">Concordo totalmente</label>
+            <input type="radio" name="questao_07" id="questao_07" value="0">
+            <label for="questao_07">Não se aplica</label>
+
+            <p>8) As informações fornecidas pelo sistema estão sempre de acordo com a legislação <br></p>
+            <input type="radio" name="questao_08" id="questao_08" value="1">
+            <label for="questao_08">Discordo totalmente</label>
+            <input type="radio" name="questao_08" id="questao_08" value="2">
+            <label for="questao_08">Discordo em parte</label>
+            <input type="radio" name="questao_08" id="questao_08" value="3">
+            <label for="questao_08">Concordo em parte</label>
+            <input type="radio" name="questao_08" id="questao_08" value="4">
+            <label for="questao_08">Concordo totalmente</label>
+            <input type="radio" name="questao_08" id="questao_08" value="0">
+            <label for="questao_08">Não se aplica <br></label>
+            </div>
+            
+            <input type="button" name="next" class="next action-button" value="Next" />           
+
+            </fieldset>
+
+            <fieldset>
+            <div class="form-card">
+                <div class="row">
+                    <div class="col-7">
+                        <h2 class="fs-title">SISTEMA:</h2>
+                        </div>
+                    <div class="col-5">
+                        <h2 class="steps">Passo 2 - 4</h2>
+                    </div>
+                </div> 
+            
+            <h4>Seção II - Uso do Sistema</h4>
+            
+            <p>9) O sistema me fornece as informações da forma que preciso <br></p>
+            <input type="radio" name="questao_09" id="questao_09" value="1">
+            <label for="questao_09">Discordo totalmente</label>
+            <input type="radio" name="questao_09" id="questao_09" value="2">
+            <label for="questao_09">Discordo em parte</label>
+            <input type="radio" name="questao_09" id="questao_09" value="3">
+            <label for="questao_09">Concordo em parte</label>
+            <input type="radio" name="questao_09" id="questao_09" value="4">
+            <label for="questao_09">Concordo totalmente</label>
+            <input type="radio" name="questao_09" id="questao_09" value="0">
+            <label for="questao_09">Não se aplica</label>
+
+            <p>10) O sistema me fornece rapidamente as informações que preciso <br></p>
+            <input type="radio" name="questao_10" id="questao_10" value="1">
+            <label for="questao_10">Discordo totalmente</label>
+            <input type="radio" name="questao_10" id="questao_10" value="2">
+            <label for="questao_10">Discordo em parte</label>
+            <input type="radio" name="questao_10" id="questao_10" value="3">
+            <label for="questao_10">Concordo em parte</label>
+            <input type="radio" name="questao_10" id="questao_10" value="4">
+            <label for="questao_10">Concordo totalmente</label>
+            <input type="radio" name="questao_10" id="questao_10" value="0">
+            <label for="questao_10">Não se aplica</label>
+            
+            <p>11) O sistema não trava nem apresenta mensagens de erro <br></p>
+            <input type="radio" name="questao_11" id="questao_11" value="1">
+            <label for="questao_11">Discordo totalmente</label>
+            <input type="radio" name="questao_11" id="questao_11" value="2">
+            <label for="questao_11">Discordo em parte</label>
+            <input type="radio" name="questao_11" id="questao_11" value="3">
+            <label for="questao_11">Concordo em parte</label>
+            <input type="radio" name="questao_11" id="questao_11" value="4">
+            <label for="questao_11">Concordo totalmente</label>
+            <input type="radio" name="questao_11" id="questao_11" value="0">
+            <label for="questao_11">Não se aplica</label>
+
+            <p>12) O sistema está sempre disponível quando preciso dele <br></p>
+            <input type="radio" name="questao_12" id="questao_12" value="1">
+            <label for="questao_12">Discordo totalmente</label>
+            <input type="radio" name="questao_12" id="questao_12" value="2">
+            <label for="questao_12">Discordo em parte</label>
+            <input type="radio" name="questao_12" id="questao_12" value="3">
+            <label for="questao_12">Concordo em parte</label>
+            <input type="radio" name="questao_12" id="questao_12" value="4">
+            <label for="questao_12">Concordo totalmente</label>
+            <input type="radio" name="questao_12" id="questao_12" value="0">
+            <label for="questao_12">Não se aplica</label>
+
+            <p>13) O sistema me auxilia no controle de prazos <br></p>
+            <input type="radio" name="questao_13" id="questao_13" value="1">
+            <label for="questao_13">Discordo totalmente</label>
+            <input type="radio" name="questao_13" id="questao_13" value="2">
+            <label for="questao_13">Discordo em parte</label>
+            <input type="radio" name="questao_13" id="questao_13" value="3">
+            <label for="questao_13">Concordo em parte</label>
+            <input type="radio" name="questao_13" id="questao_13" value="4">
+            <label for="questao_13">Concordo totalmente</label>
+            <input type="radio" name="questao_13" id="questao_13" value="0">
+            <label for="questao_13">Não se aplica</label>
+
+            <p>14) Não preciso usar outros sistemas para resolver as tarefas que preciso <br></p>
+            <input type="radio" name="questao_14" id="questao_14" value="1">
+            <label for="questao_14">Discordo totalmente</label>
+            <input type="radio" name="questao_14" id="questao_14" value="2">
+            <label for="questao_14">Discordo em parte</label>
+            <input type="radio" name="questao_14" id="questao_14" value="3">
+            <label for="questao_14">Concordo em parte</label>
+            <input type="radio" name="questao_14" id="questao_14" value="4">
+            <label for="questao_14">Concordo totalmente</label>
+            <input type="radio" name="questao_14" id="questao_14" value="0">
+            <label for="questao_14">Não se aplica</label>
+
+            <p>15) O sistema facilita meu trabalho <br></p>
+            <input type="radio" name="questao_15" id="questao_15" value="1">
+            <label for="questao_15">Discordo totalmente</label>
+            <input type="radio" name="questao_15" id="questao_15" value="2">
+            <label for="questao_15">Discordo em parte</label>
+            <input type="radio" name="questao_15" id="questao_15" value="3">
+            <label for="questao_15">Concordo em parte</label>
+            <input type="radio" name="questao_15" id="questao_15" value="4">
+            <label for="questao_15">Concordo totalmente</label>
+            <input type="radio" name="questao_15" id="questao_15" value="0">
+            <label for="questao_15">Não se aplica</label>
+            </div>
+            
+            <input type="button" name="next" class="next action-button" value="Next" />
+            <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+
+            </fieldset>
+
+            <fieldset>
+                <div class="form-card">
+                    <div class="row">
+                        <div class="col-7">
+                            <h2 class="fs-title">SISTEMA:</h2>
+                        </div>
+                        <div class="col-5">
+                            <h2 class="steps">Passo 3 - 4</h2>
+                        </div>
+                    </div> 
+
+            <p>16) Não necessito da ajuda de terceiros para usar o sistema <br></p>
+            <input type="radio" name="questao_16" id="questao_16" value="1">
+            <label for="questao_16">Discordo totalmente</label>
+            <input type="radio" name="questao_16" id="questao_16" value="2">
+            <label for="questao_16">Discordo em parte</label>
+            <input type="radio" name="questao_16" id="questao_16" value="3">
+            <label for="questao_16">Concordo em parte</label>
+            <input type="radio" name="questao_16" id="questao_16" value="4">
+            <label for="questao_16">Concordo totalmente</label>
+            <input type="radio" name="questao_16" id="questao_16" value="0">
+            <label for="questao_16">Não se aplica</label>
+                
+            <p>17) Consigo usar o sistema mesmo sem treinamento ou consulta ao guia do usuário <br></p>
+            <input type="radio" name="questao_17" id="questao_17" value="1">
+            <label for="questao_17">Discordo totalmente</label>
+            <input type="radio" name="questao_17" id="questao_17" value="2">
+            <label for="questao_17">Discordo em parte</label>
+            <input type="radio" name="questao_17" id="questao_17" value="3">
+            <label for="questao_17">Concordo em parte</label>
+            <input type="radio" name="questao_17" id="questao_17" value="4">
+            <label for="questao_17">Concordo totalmente</label>
+            <input type="radio" name="questao_17" id="questao_17" value="0">
+            <label for="questao_17">Não se aplica</label>
+                
+            <p>18) É fácil aprender a usar o sistema <br></p>
+            <input type="radio" name="questao_18" id="questao_18" value="1">
+            <label for="questao_18">Discordo totalmente</label>
+            <input type="radio" name="questao_18" id="questao_18" value="2">
+            <label for="questao_18">Discordo em parte</label>
+            <input type="radio" name="questao_18" id="questao_18" value="3">
+            <label for="questao_18">Concordo em parte</label>
+            <input type="radio" name="questao_18" id="questao_18" value="4">
+            <label for="questao_18">Concordo totalmente</label>
+            <input type="radio" name="questao_18" id="questao_18" value="0">
+            <label for="questao_18">Não se aplica</label>    
+            
+            <p>19) O sistema é fácil de usar <br></p>
+            <input type="radio" name="questao_19" id="questao_19" value="1">
+            <label for="questao_19">Discordo totalmente</label>
+            <input type="radio" name="questao_19" id="questao_19" value="2">
+            <label for="questao_19">Discordo em parte</label>
+            <input type="radio" name="questao_19" id="questao_19" value="3">
+            <label for="questao_19">Concordo em parte</label>
+            <input type="radio" name="questao_19" id="questao_19" value="4">
+            <label for="questao_19">Concordo totalmente</label>
+            <input type="radio" name="questao_19" id="questao_19" value="0">
+            <label for="questao_19">Não se aplica</label>
+
+            <p>20) Não usaria outro sistema similar em seu lugar <br></p>
+            <input type="radio" name="questao_20" id="questao_20" value="1">
+            <label for="questao_20">Discordo totalmente</label>
+            <input type="radio" name="questao_20" id="questao_20" value="2">
+            <label for="questao_20">Discordo em parte</label>
+            <input type="radio" name="questao_20" id="questao_20" value="3">
+            <label for="questao_20">Concordo em parte</label>
+            <input type="radio" name="questao_20" id="questao_20" value="4">
+            <label for="questao_20">Concordo totalmente</label>
+            <input type="radio" name="questao_20" id="questao_20" value="0">
+            <label for="questao_20">Não se aplica</label>
+
+            <p>21) O sistema está adequado à legislação <br></p>
+            <input type="radio" name="questao_21" id="questao_21" value="1">
+            <label for="questao_21">Discordo totalmente</label>
+            <input type="radio" name="questao_21" id="questao_21" value="2">
+            <label for="questao_21">Discordo em parte</label>
+            <input type="radio" name="questao_21" id="questao_21" value="3">
+            <label for="questao_21">Concordo em parte</label>
+            <input type="radio" name="questao_21" id="questao_21" value="4">
+            <label for="questao_21">Concordo totalmente</label>
+            <input type="radio" name="questao_21" id="questao_21" value="0">
+            <label for="questao_21">Não se aplica</label>
+            <p>22) Sugestões de melhoria : 
+            <input type="text" name="questao_22" id="questao_22" value=""> </p>
+            </div>
+
+            <input type="button" name="next" class="next action-button" value="Next" />
+            <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+
+            </fieldset>
+
+            <fieldset>
+                <div class="form-card">
+                    <div class="row">
+                        <div class="col-7">
+                            <h2 class="fs-title">IDENTIFICAÇÃO:</h2>
+                        </div>
+                        <div class="col-5">
+                            <h2 class="steps">Passo 4 - 4</h2>
+                        </div>
+                    </div>             
+            
+            <h4>Seção III - Identificação</h4>
+
+            <p>1) Se é usuário da organização (interno) ou não (externo) <br></p>
+            <input type="radio" name="identificacao_01" id="identificacao_01" value="0">
+            <label for="identificacao_01">Interno</label>
+            <input type="radio" name="identificacao_01" id="identificacao_01" value="1">
+            <label for="identificacao_01">Externo</label>
+
+            <p>2) Tempo de uso do sistema<br></p>           
+            <input type="radio" name="identificacao_02" id="identificacao_02" value="0">
+            <label for="identificacao_02">inferior a 6 meses</label>
+            <input type="radio" name="identificacao_02" id="identificacao_02" value="1">
+            <label for="identificacao_02">de 6 meses a 2 anos</label>
+            <input type="radio" name="identificacao_02" id="identificacao_02" value="2">
+            <label for="identificacao_02">acima de 2 anos</label>
+
+            <p>3) Frequência média de uso do sistema <br></p>            
+            <input type="radio" name="identificacao_03" id="identificacao_03" value="0">
+            <label for="identificacao_03">diariamente</label>
+            <input type="radio" name="identificacao_03" id="identificacao_03" value="1">
+            <label for="identificacao_03">semanalmente</label>
+            <input type="radio" name="identificacao_03" id="identificacao_03" value="2">
+            <label for="identificacao_03">quinzenalmente</label>
+            <input type="radio" name="identificacao_03" id="identificacao_03" value="3">
+            <label for="identificacao_03">mensalmente</label>
+            <input type="radio" name="identificacao_03" id="identificacao_03" value="4">
+            <label for="identificacao_03">acima de um mêss</label>
+
+            <p>4) Grau de escolaridade<br></p>
+            <input type="radio" name="identificacao_04" id="identificacao_04" value="0">
+            <label for="identificacao_04">fundamental</label>
+            <input type="radio" name="identificacao_04" id="identificacao_04" value="1">
+            <label for="identificacao_04">médio</label>
+            <input type="radio" name="identificacao_04" id="identificacao_04" value="2">
+            <label for="identificacao_04">superior</label>
+            <input type="radio" name="identificacao_04" id="identificacao_04" value="3">
+            <label for="identificacao_04">pós-graduação</label>
+            
+            <p>5) E-mail: <input type="email" name="identificacao_05" id="identificacao_05" value=""> </p>            
+            </div>
+            
+            <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+
+            </fieldset>
+            
+            <input type="submit" value="Finalizar" id="botao">
+
+                    </form>
+        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>Christian Gomes Bezerra dos Santos / christian.gomes@ufpe.br</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="/scripts.js"></script>
+
+</body>
+</html>
