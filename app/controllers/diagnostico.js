@@ -48,33 +48,26 @@ module.exports.saida = async function(app, req, res) {
     contador = sugestoes.split(" ").length; // conta as palavras na string
     palavras = sugestoes.split(" "); // pega as palavras e joga num array de substrings
 
-    //console.log('em "',sugestoes,'" há ', contador, ' palavras');
-    //console.log(palavras);
-
     repetidas = {};                // pega a frequência das palavras repetidas em ordem decrescente
     for (let i=0; i < contador; i++) {     // considera apenas as palavras com mais de 3 caracteres
         repetidas[palavras[i]] = sugestoes.match(new RegExp(palavras[i],'gi')).length; 
     }
     const resultado = Object.entries(repetidas).sort(([,a],[,b]) => b-a).filter(([a]) => a.length>3);
-    console.log('palavras que mais aparecem:')
     const final = resultado.slice(0, 10); // pegando as 10 primeiras palavras
-    console.log(final);
-
+    
     // convertendo as datas de início e fim da pesquisa para o formato BR
     i = new Date(analise[0].dt_inicio);
     analise[0].dt_inicio = i.toLocaleDateString('pt-BR', {timeZone: 'UTC'});
     f = new Date(analise[0].dt_fim);
     analise[0].dt_fim = f.toLocaleDateString('pt-BR', {timeZone: 'UTC'});
         
-    //console.log('ANALISE antes da saída ', analise, criticidade);
     res.render("diagnostico/saida", {analise: analise[0], criticidade, final});
 }
 
 module.exports.entrada_salvar = async function(app, req, res) {
     // verifica os dados de entrada ANALISE
 
-    var analise = req.body;
-    //console.log('como chegam os dados de entrada de ANALISE:', analise);
+    var analise = req.body;    
     req.assert('sistema', 'O nome do sistema é obrigatório').notEmpty();
     req.assert('dt_inicio', 'A data de início é obrigatória').isDate();
     req.assert('dt_fim', 'A data de fim é obrigatória').isDate();
@@ -142,28 +135,20 @@ module.exports.entrada_salvar = async function(app, req, res) {
 
     for (var i=0; i < questoes.length; i++) {
 
-        // pegando a data do documento (registro)
-        
+        // pegando a data do documento (registro)        
         data_registro = questoes[i].dt_registro;
         
-        // verificando se o documento se situa no intervalo de tempo informado
-        
+        // verificando se o documento se situa no intervalo de tempo informado        
         dt_reg = new Date(data_registro).getTime();
         dt_in = new Date(analise.dt_inicio).getTime();
-        dt_fm = new Date(analise.dt_fim).getTime();
-
-        console.log('data do documento em questoes = ', data_registro, dt_reg);
-        console.log('data de início da análise =', analise.dt_inicio, dt_in);
-        console.log('data de fim da análise =', analise.dt_fim, dt_fm);        
+        dt_fm = new Date(analise.dt_fim).getTime();   
 
         if (dt_reg >= dt_in && dt_reg <= dt_fm) {
                              
-            // soma das respostas das questoes
-        
+            // soma das respostas das questoes        
             soma_questao = questoes[i].questao_01 + questoes[i].questao_02 + questoes[i].questao_03 + questoes[i].questao_04 + questoes[i].questao_05 + questoes[i].questao_06 + questoes[i].questao_07 + questoes[i].questao_08 + questoes[i].questao_09 + questoes[i].questao_10 + questoes[i].questao_11 + questoes[i].questao_12 + questoes[i].questao_13 + questoes[i].questao_14 + questoes[i].questao_15 + questoes[i].questao_16 + questoes[i].questao_17 + questoes[i].questao_18 + questoes[i].questao_19 + questoes[i].questao_20 + questoes[i].questao_21;
 
             // agrupar algumas respostas em aspectos, para ordenação por maior criticidade (menor valor)
-
             normatividade += questoes[i].questao_08 + questoes[i].questao_21;
             compreensao += questoes[i].questao_01;
             exatidao += questoes[i].questao_02 + questoes[i].questao_06 + questoes[i].questao_09;
@@ -177,7 +162,6 @@ module.exports.entrada_salvar = async function(app, req, res) {
             facilidade_aprendizagem += questoes[i].questao_18;
 
             // variáveis para o cálculo da correlação de postos de Spearman
-
             calc_r1 += (questoes[i].questao_06 - questoes[i].questao_09)**2;
             calc_r2 += (questoes[i].questao_11 - questoes[i].questao_12)**2;
             calc_r3 += (questoes[i].questao_15 - questoes[i].questao_20)**2;
@@ -193,7 +177,6 @@ module.exports.entrada_salvar = async function(app, req, res) {
                 qt_usuario_interno++;
 
                 // obter a quantidade de respostas iguais a zero ("não se aplica")
-
                 if (questoes[i].questao_01 == 0) {
                     qt_resp_usuario_interno_zerada ++;
                 }
@@ -265,7 +248,6 @@ module.exports.entrada_salvar = async function(app, req, res) {
                 qt_usuario_externo++;
 
                 // obter a quantidade de respostas iguais a zero ("não se aplica")
-
                 if (questoes[i].questao_01 == 0) {
                     qt_resp_usuario_externo_zerada ++;
                 }    
@@ -368,7 +350,7 @@ module.exports.entrada_salvar = async function(app, req, res) {
         
         // a amostra é significativa se a quantidade de respondentes é superior à mínima calculada
 
-        if (amostra_internos <= qt_usuario_interno && amostra_externos <= qt_usuario_externo) {
+        if (qt_usuario_interno >= amostra_internos && qt_usuario_externo >= amostra_externos) {
             analise.amostra_significativa = "S";
         } else {
             analise.amostra_significativa = "N";
@@ -400,7 +382,7 @@ module.exports.entrada_salvar = async function(app, req, res) {
         z6 = r6 * Math.sqrt(r6-1);
         z7 = r7 * Math.sqrt(r7-1);
         
-        // se z estiver dentro da "região crítica" tem-se a correlação como verdadeira para o par de variáveis analisadas, adicionando +1 em grau_congruencia //
+        // se z estiver dentro da "região crítica" tem-se a correlação como verdadeira para o par de variáveis analisadas, adicionando 1 em grau_congruencia //
 
         if (z1 > 1.96) {
             grau_congruencia++;
@@ -440,15 +422,6 @@ module.exports.entrada_salvar = async function(app, req, res) {
 
         analise.qt_resp = qt_usuario_interno + qt_usuario_externo;
         analise.sugestoes = sugestoes;
-
-        console.log ('var soma_usuario_interno = ', soma_usuario_interno);
-        console.log('var qt_resp_usuario_interno = ', qt_resp_usuario_interno);
-        console.log('var qt_resp_usuario_interno_zerada = ', qt_resp_usuario_interno_zerada);
-
-        console.log ('var soma_usuario_externo = ', soma_usuario_externo);
-        console.log('var qt_resp_usuario_externo = ', qt_resp_usuario_externo);
-        console.log('var qt_resp_usuario_externo_zerada = ', qt_resp_usuario_externo_zerada);
-
         analise.nota_usuario_interno = soma_usuario_interno / qt_usuario_interno;
 
         if (qt_usuario_externo > 0) {
@@ -457,11 +430,7 @@ module.exports.entrada_salvar = async function(app, req, res) {
         } else {
             analise.nota_usuario_externo = 0;
             analise.nota_final = analise.nota_usuario_interno;
-        }    
-        
-        console.log('média internos: ', analise.nota_usuario_interno);
-        console.log('média externos: ', analise.nota_usuario_externo);
-        console.log('média final: ', analise.nota_final);
+        }
 
         analise.grau_congruencia = grau_congruencia;
 
@@ -520,8 +489,7 @@ module.exports.entrada_salvar = async function(app, req, res) {
         // pega a data e salva os dados da ANALISE
         
         var d = new Date();
-        analise.dt_registro = d.toISOString();
-        
+        analise.dt_registro = d.toISOString();        
         saidaModel.salvarEntrada(analise, function(error, result)
             {
                 res.redirect('/saida');
