@@ -3,8 +3,7 @@
 @font-face {
     font-family: 'Roboto';
     src: url('fontes/Roboto-Regular.ttf') format('truetype');
-    font-weight: normal;
-      
+    font-weight: normal;      
     /*src: url('fontes/Roboto-Black.ttf');
       src: url('fontes/Roboto-BlackItalic.ttf');
       src: url('fontes/Roboto-Bold.ttf');
@@ -15,8 +14,7 @@
       src: url('fontes/Roboto-Medium.ttf');
       src: url('fontes/Roboto-MediumItalic.ttf');
       src: url('fontes/Roboto-Thin.ttf');
-      src: url('fontes/Roboto-ThinItalic.ttf');*/
-        
+      src: url('fontes/Roboto-ThinItalic.ttf');*/        
 }
 
 :root {
@@ -46,6 +44,15 @@ html {
 
 #botao:hover {
     background-color: #683FBF;
+}
+
+#regForm label{ /* tipografia das alternativas */
+    font-size: 0.8em;
+}
+
+div.tab > p{ /* tipografia das questões */
+    color: #683FBF;
+    font-weight: bold;
 }
 
 /* configuração para o MULTI-STEP FORM */
