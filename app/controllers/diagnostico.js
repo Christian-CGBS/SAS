@@ -414,7 +414,7 @@ module.exports.entrada_salvar = async function(app, req, res) {
 
         // o grau de congruência requer um tamanho amostral mínimo de 20
 
-        if (qt_resp_ext < 20) {
+        if (qt_resp < 20) {
             analise.advertencia += '/ ATENÇÃO: grau de congruência requer uma amostra mínima de 20 (vinte) respondentes!';
         }
     
