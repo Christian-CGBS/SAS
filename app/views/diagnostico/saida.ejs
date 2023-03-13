@@ -21,11 +21,11 @@
         <p>Total de usuários respondentes : <%= analise.qt_resp %></p>
         <p>Amostra significativa ? [S/N] <%= analise.amostra_significativa %></p>
         <p>Grau de admissão da amostra [0 a 9] <%= analise.grau_congruencia %></p>
-        <p>Pontuação média final dos usuários:</p>
-        <p>usuários internos : <%= analise.nota_usuario_interno %> => <%= analise.resultado_ui %></p>
-        <p>usuários externos (se aplicável) : <%= analise.nota_usuario_externo %> => <%= analise.resultado_ue %></p>
+        <p>Pontuação média final :</p>
+        <p>usuários internos : <%= analise.media_resp_int %> => <%= analise.resultado_int %></p>
+        <p>usuários externos (se aplicável) : <%= analise.media_resp_ext %> => <%= analise.resultado_ext %></p>
         <p><%= analise.advertencia %></p>
-        <p>Pontuação média global : <%= analise.nota_final %> => <strong><%= analise.resultado %></strong></p>
+        <p>Pontuação média final : <%= analise.media_final %> => <strong><%= analise.resultado_final %></strong></p>
         <p>Itens de maior criticidade:</p>
         <ul type="none">
             <% for (var i=0; i < criticidade.length; i++) { %>
