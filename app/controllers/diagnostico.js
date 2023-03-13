@@ -137,7 +137,7 @@ module.exports.entrada_salvar = async function(app, req, res) {
         // pegando a data do documento (registro)        
         data_registro = questoes[i].dt_registro;
         
-        // verificando se o documento se situa no intervalo de tempo informado        
+        // verificando o nome do sistema e se o documento se situa no intervalo de tempo informado   
         dt_reg = new Date(data_registro).getTime();
         dt_in = new Date(analise.dt_inicio).getTime();
         dt_fm = new Date(analise.dt_fim).getTime();
@@ -146,7 +146,7 @@ module.exports.entrada_salvar = async function(app, req, res) {
         console.log('data de início: ;', analise.dt_inicio, dt_in);
         console.log('data de fim: ', analise.dt_fim, dt_fm);
 
-        if (dt_reg >= dt_in && dt_reg <= dt_fm) {
+        if ((questoes[i].sistema == analise.sistema) && (dt_reg >= dt_in && dt_reg <= dt_fm)) {
                              
             // soma das respostas das questoes        
             soma_questao = questoes[i].questao_01 + questoes[i].questao_02 + questoes[i].questao_03 + questoes[i].questao_04 + questoes[i].questao_05 + questoes[i].questao_06 + questoes[i].questao_07 + questoes[i].questao_08 + questoes[i].questao_09 + questoes[i].questao_10 + questoes[i].questao_11 + questoes[i].questao_12 + questoes[i].questao_13 + questoes[i].questao_14 + questoes[i].questao_15 + questoes[i].questao_16 + questoes[i].questao_17 + questoes[i].questao_18 + questoes[i].questao_19 + questoes[i].questao_20 + questoes[i].questao_21;
