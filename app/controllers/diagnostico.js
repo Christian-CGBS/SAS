@@ -47,7 +47,6 @@ module.exports.saida = async function(app, req, res) {
     sugestoes = analise[0].sugestoes.trim(); // tirar espaços em branco das extremidades da cadeia de caracteres
     contador = sugestoes.split(" ").length; // contar as palavras
     palavras = sugestoes.split(" "); // colocá-las num array de substrings
-
     repetidas = {};                // pegar a frequência das palavras repetidas em ordem decrescente
     for (let i=0; i < contador; i++) {     // considerar apenas as palavras com mais de 3 caracteres
         repetidas[palavras[i]] = sugestoes.match(new RegExp(palavras[i],'gi')).length; 
@@ -141,7 +140,11 @@ module.exports.entrada_salvar = async function(app, req, res) {
         // verificando se o documento se situa no intervalo de tempo informado        
         dt_reg = new Date(data_registro).getTime();
         dt_in = new Date(analise.dt_inicio).getTime();
-        dt_fm = new Date(analise.dt_fim).getTime();   
+        dt_fm = new Date(analise.dt_fim).getTime();
+
+        console.log('data do formulário: ', data_registro, dt_reg);
+        console.log('data de início: ;', analise.dt_inicio, dt_in);
+        console.log('data de fim: ', analise.dt_fim, dt_fm);
 
         if (dt_reg >= dt_in && dt_reg <= dt_fm) {
                              
@@ -285,7 +288,7 @@ module.exports.entrada_salvar = async function(app, req, res) {
         // ADVERTE se a quantidade de respondentes for inferior a 20, significando que a avaliação do grau de congruência requer um tamanho amostral superior
 
         if (qt_resp < 20) {
-            analise.advertencia += '/ ATENÇÃO: grau de congruência requer uma amostra mínima de 20 (vinte) respondentes!';
+            analise.advertencia += '/ ATENÇÃO: avaliação do grau de admissão da amostra requer um mínimo de 20 (vinte) respondentes!';
         }
     
         // resultados das variáveis de análise //
