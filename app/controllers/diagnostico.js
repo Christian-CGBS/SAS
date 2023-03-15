@@ -141,6 +141,8 @@ module.exports.entrada_salvar = async function(app, req, res) {
         dt_reg = new Date(data_registro).getTime();
         dt_in = new Date(analise.dt_inicio).getTime();
         dt_fm = new Date(analise.dt_fim).getTime();
+        // acrescentando 24h (em milissegundos) à data de fim, para incluir os formulários enviados nessa data
+        dt_fm += 86400000;
 
         console.log('data do formulário: ', data_registro, dt_reg);
         console.log('data de início: ;', analise.dt_inicio, dt_in);
