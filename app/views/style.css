@@ -33,29 +33,18 @@ html {
     height: 100%;
 }
 
-#botao {
-    text-align: center;
-    background-color: var(--corfonte1);
-    color: white;
-    padding: 5px;
-    border-radius: 10px;
-    margin-top: 15px;
-}
-
-#botao:hover {
-    background-color: #683FBF;
-}
-
 #regForm label{ /* tipografia das alternativas */
     font-size: 0.8em;
 }
 
-div.tab > p{ /* tipografia das questões */
+div.tab > p{    /* tipografia das questões */
     color: #683FBF;
     font-weight: bold;
 }
 
-
+div.sis {       /* cabeçalho para o nome do sistema */
+    text-align: center;
+}
 
 /* configuração para o MULTI-STEP FORM */
 
@@ -84,6 +73,18 @@ div.tab > p{ /* tipografia das questões */
   /* Mark the steps that are finished and valid: */
   .step.finish {
     background-color: #04AA6D;
+  }
+
+  #prevBtn, #nextBtn {    
+    background-color: var(--corfonte1);
+    color: white;
+    padding: 5px;
+    border-radius: 10px;
+    margin-top: 15px;
+  }
+
+  #prevBtn:hover, #nextBtn:hover {
+    background-color: #683FBF;
   }
 
 /* final da configuração do multi-step form */
