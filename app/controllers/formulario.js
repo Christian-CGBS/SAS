@@ -11,6 +11,7 @@ module.exports.formulario = function(app, req, res) {
 
 module.exports.questoes_salvar = async function(app, req, res){
     var questoes = req.body;
+    req.assert('sistema', 'É necessário informar o sistema').notEmpty();
     req.assert('questao_01', 'A questão 01 é obrigatória').notEmpty();
     req.assert('questao_02', 'A questão 02 é obrigatória').notEmpty();
     req.assert('questao_03', 'A questão 03 é obrigatória').notEmpty();

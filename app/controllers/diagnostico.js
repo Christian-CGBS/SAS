@@ -67,7 +67,7 @@ module.exports.entrada_salvar = async function(app, req, res) {
     // verifica os dados de entrada ANALISE
 
     var analise = req.body;    
-    req.assert('sistema', 'O nome do sistema é obrigatório').notEmpty();
+    req.assert('sistema', 'É necessário informar o sistema').notEmpty();
     req.assert('dt_inicio', 'A data de início é obrigatória').isDate();
     req.assert('dt_fim', 'A data de fim é obrigatória').isDate();
     req.assert('qt_usu_int', 'A quantidade de usuários internos é obrigatória').notEmpty();    

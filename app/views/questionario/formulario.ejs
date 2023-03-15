@@ -14,12 +14,6 @@
     </header>
 
     <main>
-        <h3>Informe o sistema a ser avaliado</h3>
-        <input type="radio" name="sistema" id="sistema" value="GESP">
-        <label for="sistema">GESP (Polícia Federal)</label>
-        <input type="radio" name="sistema" id="sistema" value="SIPAC">
-        <label for="sistema">SIPAC (UFPE)</label>
-
         <h3><br>Questionário</h3>
         
         <article>
@@ -34,7 +28,16 @@
             <% } %>
         </article>      
         
-        <form id="regForm" action="/questoes/salvar" method="post">           
+        <form id="regForm" action="/questoes/salvar" method="post">
+
+            <div class="nome_sistema">
+                <h3>Informe o sistema a ser avaliado</h3>
+                <input type="radio" name="sistema" id="sistema" value="GESP">
+                <label for="sistema">GESP (Polícia Federal)</label>
+                <input type="radio" name="sistema" id="sistema" value="SIPAC">
+                <label for="sistema">SIPAC (UFPE)</label>
+                <br> <br>
+            </div>            
 
             <div class="tab">DADOS
                 <h4>Seção I - Dados e informações que o sistema proporciona</h4>
