@@ -26,7 +26,7 @@
         <p>usuários externos (se aplicável) : <%= analise.media_resp_ext %> => <%= analise.resultado_ext %></p>
         <p>Pontuação média final : <%= analise.media_final %> => <strong><%= analise.resultado_final %></strong></p>
         <p><%= analise.advertencia %></p>
-        <p>Itens de maior criticidade:</p>
+        <p>Itens de maior criticidade [pontuações mais baixas]</p>
         <ul type="none">
             <% for (var i=0; i < criticidade.length; i++) { %>
                 <li>

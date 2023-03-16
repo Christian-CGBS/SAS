@@ -44,16 +44,24 @@ module.exports.saida = async function(app, req, res) {
     2.3) ver a frequência com que aparecem;
     2.4) retornar o resultado segmentado por núcleos factuais. */
 
+    // pegar o conteúdo do campo 'sugestões'
     sugestoes = analise[0].sugestoes;
-    contador = sugestoes.split(" ").length; // contar as palavras
-    palavras = sugestoes.split(" "); // colocá-las num array de substrings
-    repetidas = {};                // pegar a frequência das palavras repetidas em ordem decrescente
-    console.log(palavras);
-    for (let i=0; i < contador; i++) {     // considerar apenas as palavras com mais de 3 caracteres
-        repetidas[palavras[i]] = sugestoes.match(new RegExp(palavras[i],'gi')).length; 
+    // contar as palavras
+    contador = sugestoes.split(" ").length;
+    // colocar as palavras numa matriz de substrings
+    palavras = sugestoes.split(" ");
+    // pegar as palavras repetidas
+    repetidas = {};
+    // retirar os caracteres especiais das palavras    
+    const palavrasTratadas = palavras.map(palavras => palavras.replace(/[^\w\sáàâãéèêíïóôõöúçñ]/gi, ''));
+    // pegar as frequências das palavras repetidas
+    for (let i=0; i < contador; i++) {
+        repetidas[palavrasTratadas[i]] = sugestoes.match(new RegExp(palavrasTratadas[i],'gi')).length; 
     }
+    // considerar apenas as palavras com mais de 3 caracteres e colocá-las em ordem decrescente de frequência
     const resultado = Object.entries(repetidas).sort(([,a],[,b]) => b-a).filter(([a]) => a.length>3);
-    const final = resultado.slice(0, 10); // pegar as 10 primeiras palavras
+    // pegar as 10 primeiras palavras de maior frequência
+    const final = resultado.slice(0, 10);
     
     // convertendo as datas de início e fim da pesquisa para o formato BR, apenas para fins de exibição na saída
     i = new Date(analise[0].dt_inicio);
@@ -202,13 +210,13 @@ module.exports.entrada_salvar = async function(app, req, res) {
         // ADVERTE se a quantidade de RESPONDENTES INTERNOS ou EXTERNOS for maior que a de USUÁRIOS INTERNOS ou EXTERNOS, respectivamente, informadas na entrada da análise
         
         if (qt_resp_ext > analise.qt_usu_ext) {
-            analise.advertencia = '/ ATENÇÃO: número de respondentes externos maior que o de usuários externos !';
+            analise.advertencia = '/ ATENÇÃO: número de respondentes externos maior que o de usuários externos ! ';
         } else {
             analise.advertencia = '';
         }
 
         if (qt_resp_int > analise.qt_usu_int) {
-            analise.advertencia = '/ ATENÇÃO: número de respondentes internos maior que o de usuários internos !';
+            analise.advertencia = '/ ATENÇÃO: número de respondentes internos maior que o de usuários internos ! ';
         } else {
             analise.advertencia = '';
         }
@@ -293,7 +301,7 @@ module.exports.entrada_salvar = async function(app, req, res) {
         // ADVERTE se a quantidade de respondentes for inferior a 20, significando que a avaliação do grau de congruência requer um tamanho amostral superior
 
         if (qt_resp < 20) {
-            analise.advertencia += '/ ATENÇÃO: avaliação do grau de admissão da amostra requer um mínimo de 20 (vinte) respondentes!';
+            analise.advertencia += '/ ATENÇÃO: avaliação do grau de admissão da amostra requer um mínimo de 20 (vinte) respondentes! ';
         }
     
         // resultados das variáveis de análise //
