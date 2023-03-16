@@ -44,10 +44,11 @@ module.exports.saida = async function(app, req, res) {
     2.3) ver a frequência com que aparecem;
     2.4) retornar o resultado segmentado por núcleos factuais. */
 
-    sugestoes = analise[0].sugestoes.trim(); // tirar espaços em branco das extremidades da cadeia de caracteres
+    sugestoes = analise[0].sugestoes;
     contador = sugestoes.split(" ").length; // contar as palavras
     palavras = sugestoes.split(" "); // colocá-las num array de substrings
     repetidas = {};                // pegar a frequência das palavras repetidas em ordem decrescente
+    console.log(palavras);
     for (let i=0; i < contador; i++) {     // considerar apenas as palavras com mais de 3 caracteres
         repetidas[palavras[i]] = sugestoes.match(new RegExp(palavras[i],'gi')).length; 
     }
@@ -191,6 +192,8 @@ module.exports.entrada_salvar = async function(app, req, res) {
             console.log('registro ',i, ' não pertence ao período de pesquisa informado');
         }
     }  // fim da estrutura (laço - "for") que examina as questões de um formulário
+
+    sugestoes = sugestoes.trim(); // retira espaços em branco das extremidades do string
     
     qt_resp = qt_resp_int + qt_resp_ext;  // total de respondentes
         
