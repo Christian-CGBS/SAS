@@ -210,13 +210,13 @@ module.exports.entrada_salvar = async function(app, req, res) {
         // ADVERTE se a quantidade de RESPONDENTES INTERNOS ou EXTERNOS for maior que a de USUÁRIOS INTERNOS ou EXTERNOS, respectivamente, informadas na entrada da análise
         
         if (qt_resp_ext > analise.qt_usu_ext) {
-            analise.advertencia = '/ ATENÇÃO: número de respondentes externos maior que o de usuários externos ! ';
+            analise.advertencia = '/ ATENÇÃO: número de respondentes externos maior que o de usuários externos informado ! ';
         } else {
             analise.advertencia = '';
         }
 
         if (qt_resp_int > analise.qt_usu_int) {
-            analise.advertencia = '/ ATENÇÃO: número de respondentes internos maior que o de usuários internos ! ';
+            analise.advertencia = '/ ATENÇÃO: número de respondentes internos maior que o de usuários internos informado ! ';
         } else {
             analise.advertencia = '';
         }
