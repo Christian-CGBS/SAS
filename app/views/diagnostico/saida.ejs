@@ -6,6 +6,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Avaliação de SI</title>
     <link rel="stylesheet" href="style.css">
+
+    <script>
+        window.onload = function () {
+            
+        var chart = new CanvasJS.Chart("chartContainer", {
+            animationEnabled: true,
+            
+            title:{
+                text:"Aspectos mais críticos"
+            },
+            axisX:{
+                interval: 1
+            },
+            axisY2:{
+                interlacedColor: "rgba(1,77,101,.2)",
+                gridColor: "rgba(1,77,101,.1)",
+                title: "Valores mais baixos"
+            },
+            data: [{
+                type: "bar",
+                name: "companies",
+                axisYType: "secondary",
+                color: "#014D65",
+                dataPoints: [
+                    { y: criticidade[0].valor, label: criticidade[0].nome },
+                    { y: criticidade[1].valor, label: criticidade[1].nome },
+                    { y: criticidade[2].valor, label: criticidade[2].nome },
+                    { y: criticidade[3].valor, label: criticidade[3].nome },
+                    { y: criticidade[4].valor, label: criticidade[4].nome },
+                    { y: criticidade[5].valor, label: criticidade[5].nome },
+                    { y: criticidade[6].valor, label: criticidade[6].nome },
+                    { y: criticidade[7].valor, label: criticidade[7].nome },
+                    { y: criticidade[8].valor, label: criticidade[8].nome },
+                    { y: criticidade[9].valor, label: criticidade[9].nome }                    
+                ]
+            }]
+        });
+        chart.render();        
+        }
+        </script>
+
 </head>
 <body>
     <header>
@@ -34,6 +75,10 @@
                 </li>
             <% } %>
         </ul>
+
+        <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+        <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
         <p>Sugestões recebidas: [10 palavras que mais aparecem] </p>
         <ul type="none">
             <% for (var i=0; i < final.length; i++) { %>
@@ -41,11 +86,11 @@
                     <%= final[i] %>
                 </li>
             <% } %>
-        </ul>
+        </ul>       
     
     </main>
     <footer>
         <p>Christian Gomes Bezerra dos Santos / christian.gomes@ufpe.br</p>
-    </footer>    
+    </footer>
 </body>
 </html>
