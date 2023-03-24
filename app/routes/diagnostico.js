@@ -14,4 +14,8 @@ module.exports = function(app) {
     app.get('/saida_vazia', function(req,res){
         app.app.controllers.diagnostico.saida_vazia(app, req, res);
     });
+
+    app.get('/gerarpdf', function(req,res){
+        app.app.controllers.diagnostico.gerarpdf(app, req, res);
+    });
 }

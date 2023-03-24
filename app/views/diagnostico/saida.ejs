@@ -8,13 +8,17 @@
     <link rel="stylesheet" href="style.css">
 
     <script>
+        window.criticidade = <%- JSON.stringify(criticidade) %>
+    </script>
+
+    <script>
         window.onload = function () {
             
         var chart = new CanvasJS.Chart("chartContainer", {
             animationEnabled: true,
             
             title:{
-                text:"Aspectos mais críticos"
+                text:"ASPECTOS CRÍTICOS"
             },
             axisX:{
                 interval: 1
@@ -22,31 +26,22 @@
             axisY2:{
                 interlacedColor: "rgba(1,77,101,.2)",
                 gridColor: "rgba(1,77,101,.1)",
-                title: "Valores mais baixos"
+                title: "Os itens MENORES são os de PIOR desempenho"
             },
             data: [{
                 type: "bar",
                 name: "companies",
                 axisYType: "secondary",
                 color: "#014D65",
-                dataPoints: [
-                    { y: criticidade[0].valor, label: criticidade[0].nome },
-                    { y: criticidade[1].valor, label: criticidade[1].nome },
-                    { y: criticidade[2].valor, label: criticidade[2].nome },
-                    { y: criticidade[3].valor, label: criticidade[3].nome },
-                    { y: criticidade[4].valor, label: criticidade[4].nome },
-                    { y: criticidade[5].valor, label: criticidade[5].nome },
-                    { y: criticidade[6].valor, label: criticidade[6].nome },
-                    { y: criticidade[7].valor, label: criticidade[7].nome },
-                    { y: criticidade[8].valor, label: criticidade[8].nome },
-                    { y: criticidade[9].valor, label: criticidade[9].nome }                    
-                ]
+                dataPoints: criticidade.map(c => ({
+                    y: c.valor,
+                    label: c.nome
+                }))
             }]
         });
         chart.render();        
         }
-        </script>
-
+    </script>
 </head>
 <body>
     <header>
@@ -86,8 +81,13 @@
                     <%= final[i] %>
                 </li>
             <% } %>
-        </ul>       
-    
+        </ul>
+
+        <form action="/gerarpdf">
+            <p> Pressione <input type="submit" value="Gerar PDF" id="relatoriopdf"> se quiser obter um relatório em formato .PDF &#x1F4C4</p>   
+            
+        </form>  
+            
     </main>
     <footer>
         <p>Christian Gomes Bezerra dos Santos / christian.gomes@ufpe.br</p>
