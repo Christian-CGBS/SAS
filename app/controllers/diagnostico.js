@@ -10,33 +10,6 @@ module.exports.saida_vazia = async function(app, req, res) {
     res.render("diagnostico/saida_vazia");
 }
 
-module.exports.gerarpdf = function(app, req, res) {
-    
-    ejs.renderFile(path.join(__dirname, './views/', "saida.ejs"), {saida: saida}, (err, data) => {
-        if (err) {
-              res.send(err);
-        } else {
-            let options = {
-                "height": "11.25in",
-                "width": "8.5in",
-                "header": {
-                    "height": "20mm"
-                },
-                "footer": {
-                    "height": "20mm",
-                },
-            };
-            pdf.create(data, options).toFile("relatorio.pdf", function (err, data) {
-                if (err) {
-                    res.send(err);
-                } else {
-                    res.send("Relatório criado com sucesso!");
-                }
-            });
-        }
-    });
-}
-
 module.exports.saida = async function(app, req, res) {
     // apresenta os dados de ANALISE
     var connection = await dbConnection();

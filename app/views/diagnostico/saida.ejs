@@ -83,14 +83,24 @@
             <% } %>
         </ul>
 
-        <form action="/gerarpdf">
-            <p> Pressione <input type="submit" value="Gerar PDF" id="relatoriopdf"> se quiser obter um relatório em formato .PDF &#x1F4C4</p>   
-            
-        </form>  
+        <div id="app">
+            <p>Pressione se quiser obter um relatório em formato .DPF </p>
+            <button id="download-pdf">Download PDF</button>
+        </div>
             
     </main>
     <footer>
         <p>Christian Gomes Bezerra dos Santos / christian.gomes@ufpe.br</p>
     </footer>
 </body>
+
+<script
+src="https://code.jquery.com/jquery-3.4.1.min.js"
+integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+crossorigin="anonymous"
+></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"></script>
+<script src="/saida-scripts.js"></script>
+
 </html>

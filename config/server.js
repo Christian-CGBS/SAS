@@ -3,10 +3,6 @@ var consign = require('consign');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 
-let pdf = require("html-pdf");
-let path = require("path");
-let ejs = require("ejs");
-
 var app = express();
 
 app.set('view engine', 'ejs');
