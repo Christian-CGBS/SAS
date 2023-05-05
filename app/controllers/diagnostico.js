@@ -34,16 +34,6 @@ module.exports.saida = async function(app, req, res) {
     criticidade.sort(function(a, b){return a.valor - b.valor});
 
     // Análise da variável sugestoes
-        
-    /* 1. separar em núcleos factuais:
-    a) sugestoes_usuarios_internos e sugestoes_usuarios_externos
-    b) sugestoes_usuarios_experientes e sugestoes_usuarios_neofitos */
-    /* 2. extrair palavras relevantes:
-    2.1) selecionar os aspectos de maior criticidade (menor valor); 
-    2.2) extrair palavras dos campos sugestoes (palavras acima de três letras);
-    2.3) ver a frequência com que aparecem;
-    2.4) retornar o resultado segmentado por núcleos factuais. */
-
     // pegar o conteúdo do campo 'sugestões'
     sugestoes = analise[0].sugestoes;
     // contar as palavras
