@@ -187,7 +187,7 @@ module.exports.entrada_salvar = async function(app, req, res) {
             sugestoes = sugestoes + " " + questoes[i].questao_22; // acumulação das sugestoes (texto)
             
         } else {
-            console.log('registro ',i, ' não pertence ao período de pesquisa informado');
+            console.log('registro ',i, ' não pertence aos parâmetros de pesquisa informados');
         }
     }  // fim da estrutura (laço - "for") que examina as questões de um formulário
 
