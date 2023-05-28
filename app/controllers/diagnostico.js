@@ -46,7 +46,7 @@ module.exports.saida = async function(app, req, res) {
     const palavrasTratadas = palavras.map(palavras => palavras.replace(/[^\w\sáàâãéèêíïóôõöúçñ]/gi, ''));
     // pegar as frequências das palavras repetidas
     for (let i=0; i < contador; i++) {
-        repetidas[palavrasTratadas[i]] = sugestoes.match(new RegExp(palavrasTratadas[i],'gi'))?.length ?? 0; 
+        repetidas[palavrasTratadas[i].toLowerCase()] = sugestoes.match(new RegExp(palavrasTratadas[i],'gi'))?.length ?? 0; 
     }
     // considerar apenas as palavras com mais de 3 caracteres e colocá-las em ordem decrescente de frequência
     const resultado = Object.entries(repetidas).sort(([,a],[,b]) => b-a).filter(([a]) => a.length>3);
