@@ -1,0 +1,1 @@
+mongoexport --db=banco_questoes --collection=questoes --type=csv --fields=questao_22,identificacao_05 --out=C:\Users\christian.cgbs\Desktop\SAS\Extracoes\planilha.csv
