@@ -10,7 +10,7 @@ button.addEventListener("click", () => {
 const buttonCsv = document.getElementById("download-csv");
 buttonCsv.addEventListener("click", () => {
   console.log('gerando planilha com a íntegra das sugestões', sugestoes);
-  const sampleData = sugestoes;
+  const sampleData = sugestoes.map(s => ({ sugestoes: s}));
   const csv = Papa.unparse(sampleData);
   const blob = new Blob([csv], {type:"text/csv"});
   const url = URL.createObjectURL(blob);
