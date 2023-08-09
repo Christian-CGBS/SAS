@@ -6,28 +6,14 @@ button.addEventListener("click", () => {
   doc.addHTML(document.body, () => doc.save("resultado_analise.pdf"));
 });
 
-/* instrução para gerar uma planilha CSV com a ÍNTEGRA das SUGESTÕES contidas nos formulários
-const buttonCsv = document.getElementById("download-csv");
-buttonCsv.addEventListener("click", () => {
-  console.log('gerando planilha com a íntegra das sugestões', sugestoes);
-  const sampleData = sugestoes.map(s => ({ sugestoes: s}));
-  const csv = Papa.unparse(sampleData);
-  const blob = new Blob([csv], {type:"text/csv"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.ref = url;
-  a.download = "sample_data.csv";
-  a.textContent = "Download CSV";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-}); */
-
 // instrução para gerar um PDF contendo as SUGESTÕES contidas nos formulários
 
 const buttonDownloadSugestoes = document.getElementById("download-sugestoes-pdf");
 buttonDownloadSugestoes.addEventListener("click", async() => {
   const doc = new jsPDF("p", "pt", "a4");
-  await doc.text(sugestoes, 10, 10);
+  // await doc.text(sugestoes, 10, 10);
+  const maxWidth = 500; // Largura máxima da linha
+  const lines = doc.splitTextToSize(sugestoes, maxWidth);
+  doc.text(lines, 10, 10);
   await doc.save("resultado_sugestoes.pdf");  
 });
