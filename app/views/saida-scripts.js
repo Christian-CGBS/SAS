@@ -6,11 +6,11 @@ button.addEventListener("click", () => {
   doc.addHTML(document.body, () => doc.save("html.pdf"));
 });
 
-// instrução para gerar uma planilha CSV com as respostas dos formulários
-
+// instrução para gerar uma planilha CSV com a ÍNTEGRA das SUGESTÕES contidas nos formulários
+const buttonCsv = document.getElementById("download-csv");
 buttonCsv.addEventListener("click", () => {
-  console.log('imprimindo planilha');
-  const sampleData = [ questoes[i] ];
+  console.log('gerando planilha com a íntegra das sugestões', sugestoes);
+  const sampleData = sugestoes;
   const csv = Papa.unparse(sampleData);
   const blob = new Blob([csv], {type:"text/csv"});
   const url = URL.createObjectURL(blob);

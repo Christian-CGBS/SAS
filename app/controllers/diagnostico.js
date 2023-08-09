@@ -59,7 +59,7 @@ module.exports.saida = async function(app, req, res) {
     f = new Date(analise[0].dt_fim);
     analise[0].dt_fim = f.toLocaleDateString('pt-BR', {timeZone: 'UTC'});
         
-    res.render("diagnostico/saida", {analise: analise[0], criticidade, final});
+    res.render("diagnostico/saida", {analise: analise[0], criticidade, final, sugestoes});
 }
 
 module.exports.entrada_salvar = async function(app, req, res) {
