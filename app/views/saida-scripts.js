@@ -3,10 +3,10 @@
 const button = document.getElementById("download-pdf");
 button.addEventListener("click", () => {
   const doc = new jsPDF("p", "pt", "a4");
-  doc.addHTML(document.body, () => doc.save("html.pdf"));
+  doc.addHTML(document.body, () => doc.save("resultado_analise.pdf"));
 });
 
-// instrução para gerar uma planilha CSV com a ÍNTEGRA das SUGESTÕES contidas nos formulários
+/* instrução para gerar uma planilha CSV com a ÍNTEGRA das SUGESTÕES contidas nos formulários
 const buttonCsv = document.getElementById("download-csv");
 buttonCsv.addEventListener("click", () => {
   console.log('gerando planilha com a íntegra das sugestões', sugestoes);
@@ -21,5 +21,13 @@ buttonCsv.addEventListener("click", () => {
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
+}); */
 
+// instrução para gerar um PDF contendo as SUGESTÕES contidas nos formulários
+
+const buttonDownloadSugestoes = document.getElementById("download-sugestoes-pdf");
+buttonDownloadSugestoes.addEventListener("click", async() => {
+  const doc = new jsPDF("p", "pt", "a4");
+  await doc.text(sugestoes, 10, 10);
+  await doc.save("resultado_sugestoes.pdf");  
 });
