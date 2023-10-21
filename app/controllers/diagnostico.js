@@ -297,6 +297,8 @@ module.exports.entrada_salvar = async function(app, req, res) {
         // resultados das variáveis de análise //
 
         analise.qt_resp = qt_resp;
+        analise.qt_resp_int = qt_resp_int;
+        analise.qt_resp_ext = qt_resp_ext;
         analise.sugestoes = sugestoes;
         analise.media_resp_int = soma_resp_int / qt_resp_int;
 
