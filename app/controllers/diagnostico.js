@@ -248,15 +248,15 @@ module.exports.entrada_salvar = async function(app, req, res) {
 
         // cálculo de z para o teste de hipótese da correlação //
 
-        z1 = r1 * Math.sqrt(r1-1);
-        z2 = r2 * Math.sqrt(r2-1);
-        z3 = r3 * Math.sqrt(r3-1);
-        z41 = r41 * Math.sqrt(r41-1);
-        z42 = r42 * Math.sqrt(r42-1);
-        z43 = r43 * Math.sqrt(r43-1);
-        z5 = r5 * Math.sqrt(r5-1);
-        z6 = r6 * Math.sqrt(r6-1);
-        z7 = r7 * Math.sqrt(r7-1);
+        z1 = r1 * Math.sqrt(qt_resp-1);
+        z2 = r2 * Math.sqrt(qt_resp-1);
+        z3 = r3 * Math.sqrt(qt_resp-1);
+        z41 = r41 * Math.sqrt(qt_resp-1);
+        z42 = r42 * Math.sqrt(qt_resp-1);
+        z43 = r43 * Math.sqrt(qt_resp-1);
+        z5 = r5 * Math.sqrt(qt_resp-1);
+        z6 = r6 * Math.sqrt(qt_resp-1);
+        z7 = r7 * Math.sqrt(qt_resp-1);
         
         // se z estiver dentro da "região crítica" tem-se a correlação como verdadeira para o par de variáveis analisadas, adicionando 1 em grau_congruencia //
 
