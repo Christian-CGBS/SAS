@@ -312,34 +312,83 @@ module.exports.entrada_salvar = async function(app, req, res) {
         spearman.calc()
             .then(value => console.log(value))
             .catch(err => console.error(err));
-        
-        // se z estiver dentro da "região crítica" tem-se a correlação como verdadeira para o par de variáveis analisadas, adicionando 1 em grau_congruencia //
+        z1 = value;
 
-        if (z1 > 1.96) {
+        const spearman = new Spearman(r2x, r2y);
+        spearman.calc()
+            .then(value => console.log(value))
+            .catch(err => console.error(err));
+        z2 = value;
+
+        const spearman = new Spearman(r3x, r3y);
+        spearman.calc()
+            .then(value => console.log(value))
+            .catch(err => console.error(err));
+        z3 = value;
+
+        const spearman = new Spearman(r4x, r4y);
+        spearman.calc()
+            .then(value => console.log(value))
+            .catch(err => console.error(err));
+        z4 = value;
+
+        const spearman = new Spearman(r5x, r5y);
+        spearman.calc()
+            .then(value => console.log(value))
+            .catch(err => console.error(err));
+        z5 = value;
+
+        const spearman = new Spearman(r6x, r6y);
+        spearman.calc()
+            .then(value => console.log(value))
+            .catch(err => console.error(err));
+        z6 = value;
+
+        const spearman = new Spearman(r7x, r7y);
+        spearman.calc()
+            .then(value => console.log(value))
+            .catch(err => console.error(err));
+        z7 = value;
+
+        const spearman = new Spearman(r8x, r8y);
+        spearman.calc()
+            .then(value => console.log(value))
+            .catch(err => console.error(err));
+        z8 = value;
+
+        const spearman = new Spearman(r9x, r9y);
+        spearman.calc()
+            .then(value => console.log(value))
+            .catch(err => console.error(err));
+        z9 = value;
+        
+        // Há correlação quando o resultado da comparação é diferente de zero, adicionando adicionando 1 a grau_congruencia //
+
+        if (z1 != 0) {
             grau_congruencia++;
         }
-        if (z2 > 1.96) {
+        if (z2 != 0) {
             grau_congruencia++;
         }    
-        if (z3 > 1.96) {
+        if (z3 != 0) {
             grau_congruencia++;
         }    
-        if (z41 > 1.96) {
+        if (z4 != 0) {
             grau_congruencia++;
         }    
-        if (z42 > 1.96) {
+        if (z5 != 0) {
             grau_congruencia++;
         }    
-        if (z43 > 1.96) {
+        if (z6 != 0) {
             grau_congruencia++;
         }    
-        if (z5 > 1.96) {
+        if (z7 != 0) {
             grau_congruencia++;
         }    
-        if (z6 > 1.96) {
+        if (z8 != 0) {
             grau_congruencia++;
         }    
-        if (z7 > 1.96) {
+        if (z9 != 0) {
             grau_congruencia++;
         }
 
