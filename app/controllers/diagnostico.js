@@ -1,5 +1,9 @@
 const dbConnection = require('../../config/dbConnection');
 
+"use strict"; // uso da biblioteca para para o índice de Spearman
+
+const Spearman = require('spearman-rho'); // uso da biblioteca para para o índice de Spearman
+
 module.exports.entrada = function(app, req, res) {    
     // captura os dados de entrada para ANALISE
     res.render("diagnostico/entrada", {validacao : {}, analise : {} });    
@@ -103,7 +107,7 @@ module.exports.entrada_salvar = async function(app, req, res) {
     // variáveis para o cálculo do grau de congruência da amostra
     // técnica da correlação de postos de Spearman
 
-    var calc_r1 = 0;  
+    /*var calc_r1 = 0;  
     var calc_r2 = 0;
     var calc_r3 = 0;  
     var calc_r41 = 0;
@@ -111,7 +115,29 @@ module.exports.entrada_salvar = async function(app, req, res) {
     var calc_r43 = 0;
     var calc_r5 = 0;
     var calc_r6 = 0;
-    var calc_r7 = 0;
+    var calc_r7 = 0;*/
+
+    // criação dos vetores a serem usados no cálculo de correlação de Spearman
+
+    r1x = [];
+    r1y = [];
+    r2x = [];
+    r2y = [];
+    r3x = [];
+    r3y = [];
+    r4x = [];
+    r4y = [];
+    r5x = [];
+    r5y = [];
+    r6x = [];
+    r6y = [];
+    r7x = [];
+    r7y = [];
+    r8x = [];
+    r8y = [];
+    r9x = [];
+    r9y = [];
+    
     var grau_congruencia = 0;
 
     // variáveis de criticidade = acumulam valores de certas tipos de questões correlacionadas
@@ -166,7 +192,8 @@ module.exports.entrada_salvar = async function(app, req, res) {
             facilidade_aprendizagem += questoes[i].questao_18;
 
             // variáveis para o cálculo da correlação de postos de Spearman
-            calc_r1 += (questoes[i].questao_06 - questoes[i].questao_09)**2;
+            
+            /*calc_r1 += (questoes[i].questao_06 - questoes[i].questao_09)**2;
             calc_r2 += (questoes[i].questao_11 - questoes[i].questao_12)**2;
             calc_r3 += (questoes[i].questao_15 - questoes[i].questao_20)**2;
             calc_r41 += (questoes[i].questao_16 - questoes[i].questao_17)**2;
@@ -174,7 +201,28 @@ module.exports.entrada_salvar = async function(app, req, res) {
             calc_r43 += (questoes[i].questao_17 - questoes[i].questao_19)**2;
             calc_r5 += (questoes[i].questao_16 - questoes[i].identificacao_02)**2;
             calc_r6 += (questoes[i].questao_20 - questoes[i].identificacao_03)**2;
-            calc_r7 += (questoes[i].questao_18 - questoes[i].identificacao_04)**2;
+            calc_r7 += (questoes[i].questao_18 - questoes[i].identificacao_04)**2;*/
+
+            // colocação do conteúdo das variáveis em vetores X e Y para cálculo de Spearman
+
+            r1x.push(questoes[i].questao_06);
+            r1y.push(questoes[i].questao_09);
+            r2x.push(questoes[i].questao_11);
+            r2y.push(questoes[i].questao_12);
+            r3x.push(questoes[i].questao_15);
+            r3y.push(questoes[i].questao_20);
+            r4x.push(questoes[i].questao_16);
+            r4y.push(questoes[i].questao_17);
+            r5x.push(questoes[i].questao_16);
+            r5y.push(questoes[i].questao_19);
+            r6x.push(questoes[i].questao_17);
+            r6y.push(questoes[i].questao_19);
+            r7x.push(questoes[i].questao_16);
+            r7y.push(questoes[i].identificacao_02);
+            r8x.push(questoes[i].questao_20);
+            r8y.push(questoes[i].identificacao_03);
+            r9x.push(questoes[i].questao_18);
+            r9y.push(questoes[i].identificacao_04);
                         
             if (questoes[i].identificacao_01 == 0) { 
                 soma_resp_int += soma_questao; // somas dos respondentes internos
@@ -236,7 +284,7 @@ module.exports.entrada_salvar = async function(app, req, res) {
         // variáveis de congruência: r1, r2, r3, r41, r42, r43, r5, r6 e r7
         // cálculo da correlação de postos de Spearman
 
-        r1 = 1 - ( (6 * calc_r1) / (qt_resp - (qt_resp**2 - 1)) );
+        /*r1 = 1 - ( (6 * calc_r1) / (qt_resp - (qt_resp**2 - 1)) );
         r2 = 1 - ( (6 * calc_r2) / (qt_resp - (qt_resp**2 - 1)) );
         r3 = 1 - ( (6 * calc_r3) / (qt_resp - (qt_resp**2 - 1)) );
         r41 = 1 - ( (6 * calc_r41) / (qt_resp - (qt_resp**2 - 1)) );
@@ -256,7 +304,14 @@ module.exports.entrada_salvar = async function(app, req, res) {
         z43 = r43 * Math.sqrt(qt_resp-1);
         z5 = r5 * Math.sqrt(qt_resp-1);
         z6 = r6 * Math.sqrt(qt_resp-1);
-        z7 = r7 * Math.sqrt(qt_resp-1);
+        z7 = r7 * Math.sqrt(qt_resp-1); */
+
+        // utilização dos vetores para a chamada da função para o cálculo de Spearman
+
+        const spearman = new Spearman(r1x, r1y);
+        spearman.calc()
+            .then(value => console.log(value))
+            .catch(err => console.error(err));
         
         // se z estiver dentro da "região crítica" tem-se a correlação como verdadeira para o par de variáveis analisadas, adicionando 1 em grau_congruencia //
 
