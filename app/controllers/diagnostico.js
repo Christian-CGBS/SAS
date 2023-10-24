@@ -307,34 +307,46 @@ module.exports.entrada_salvar = async function(app, req, res) {
             spearman1.calc(), spearman2.calc(), spearman3.calc(),
             spearman4.calc(), spearman5.calc(), spearman6.calc(),
             spearman7.calc(), spearman8.calc(), spearman9.calc()]);
+
+        // arrendondando para duas casas decimais
+        
+        r1 = z1.toFixed(2);
+        r2 = z2.toFixed(2);
+        r3 = z3.toFixed(2);
+        r4 = z4.toFixed(2);
+        r5 = z5.toFixed(2);
+        r6 = z6.toFixed(2);
+        r7 = z7.toFixed(2);
+        r8 = z8.toFixed(2);
+        r9 = z9.toFixed(2);
         
         // Há correlação (positiva ou negativa) quando zn é diferente de zero, adicionando 1 a grau_congruencia //
 
-        if (z1 != 0) {
+        if (r1 != 0) {
             grau_congruencia++;
         }
-        if (z2 != 0) {
+        if (r2 != 0) {
             grau_congruencia++;
         }    
-        if (z3 != 0) {
+        if (r3 != 0) {
             grau_congruencia++;
         }    
-        if (z4 != 0) {
+        if (r4 != 0) {
             grau_congruencia++;
         }    
-        if (z5 != 0) {
+        if (r5 != 0) {
             grau_congruencia++;
         }    
-        if (z6 != 0) {
+        if (r6 != 0) {
             grau_congruencia++;
         }    
-        if (z7 != 0) {
+        if (r7 != 0) {
             grau_congruencia++;
         }    
-        if (z8 != 0) {
+        if (r8 != 0) {
             grau_congruencia++;
         }    
-        if (z9 != 0) {
+        if (r9 != 0) {
             grau_congruencia++;
         }
 
