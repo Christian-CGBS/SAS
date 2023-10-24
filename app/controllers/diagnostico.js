@@ -312,59 +312,57 @@ module.exports.entrada_salvar = async function(app, req, res) {
         spearman1.calc()
             .then(value => console.log("value z1 -->", value))
             .catch(err => console.error(err));
-        //z1 = value;
 
         const spearman2 = new Spearman(r2x, r2y);
         spearman2.calc()
             .then(value => console.log("value z2 -->", value))
             .catch(err => console.error(err));
-        //z2 = value;
 
         const spearman3 = new Spearman(r3x, r3y);
         spearman3.calc()
             .then(value => console.log("value z3 -->", value))
             .catch(err => console.error(err));
-        //z3 = value;
 
         const spearman4 = new Spearman(r4x, r4y);
         spearman4.calc()
             .then(value => console.log("value z4 -->", value))
             .catch(err => console.error(err));
-        //z4 = value;
 
         const spearman5 = new Spearman(r5x, r5y);
         spearman5.calc()
             .then(value => console.log("value z5 -->", value))
             .catch(err => console.error(err));
-        //z5 = value;
 
         const spearman6 = new Spearman(r6x, r6y);
         spearman6.calc()
             .then(value => console.log("value z6 -->", value))
             .catch(err => console.error(err));
-        //z6 = value;
 
         const spearman7 = new Spearman(r7x, r7y);
         spearman7.calc()
             .then(value => console.log("value z7 -->", value))
             .catch(err => console.error(err));
-        //z7 = value;
 
         const spearman8 = new Spearman(r8x, r8y);
         spearman8.calc()
             .then(value => console.log("value z8 -->", value))
             .catch(err => console.error(err));
-        //z8 = value;
 
         const spearman9 = new Spearman(r9x, r9y);
         spearman9.calc()
             .then(value => console.log("value z9 -->", value))
             .catch(err => console.error(err));
-        //z9 = value;
-        
-        // Há correlação quando o resultado da comparação é diferente de zero, adicionando adicionando 1 a grau_congruencia //
 
-        /*if (z1 != 0) {
+        // os resultados das comparações dos vetores x e y vão para z
+
+        const [z1, z2, z3, z4, z5, z6, z7, z8, z9] = await Promise.all([
+            spearman1.calc(), spearman2.calc(), spearman3.calc(),
+            spearman4.calc(), spearman5.calc(), spearman6.calc(),
+            spearman7.calc(), spearman8.calc(), spearman9.calc()]);
+        
+        // Há correlação quando zn é diferente de zero, adicionando 1 a grau_congruencia //
+
+        if (z1 != 0) {
             grau_congruencia++;
         }
         if (z2 != 0) {
@@ -390,7 +388,7 @@ module.exports.entrada_salvar = async function(app, req, res) {
         }    
         if (z9 != 0) {
             grau_congruencia++;
-        }*/
+        }
 
         // ADVERTE se a quantidade de respondentes for inferior a 20, significando que a avaliação do grau de congruência requer um tamanho amostral superior
 
