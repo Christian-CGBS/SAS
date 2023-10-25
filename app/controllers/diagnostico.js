@@ -308,7 +308,7 @@ module.exports.entrada_salvar = async function(app, req, res) {
             spearman4.calc(), spearman5.calc(), spearman6.calc(),
             spearman7.calc(), spearman8.calc(), spearman9.calc()]);
 
-        // arrendondando para duas casas decimais
+        // arrendondando para duas casas decimais // 
         
         r1 = z1.toFixed(2);
         r2 = z2.toFixed(2);
